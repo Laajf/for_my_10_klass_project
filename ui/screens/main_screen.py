@@ -1,16 +1,24 @@
 from kivy.uix.screenmanager import Screen
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty
+import os
+
+
+# Загружаем KV-файл прямо при импорте
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'main_screen.kv')
+Builder.load_file(kv_path)
 
 
 class MainScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    """Главный экран — отображает задачи и кнопки навигации."""
 
-        # TODO: Добавить красивый UI главного экрана
-        # TODO: Список задач, кнопки добавления/навигации
-        # TODO: Интегрировать с TaskService для отображения задач
+    tasks_container = ObjectProperty(None)
 
-        layout = BoxLayout(orientation='vertical')
-        layout.add_widget(Label(text="Главный экран Smart Planner"))
-        self.add_widget(layout)
+    def _go_to_task_editor(self, instance=None):
+        self.manager.current = 'task_editor'
+
+    def _go_to_calendar(self, instance=None):
+        self.manager.current = 'calendar'
+
+    def _go_to_statistics(self, instance=None):
+        self.manager.current = 'statistics'

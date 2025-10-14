@@ -1,0 +1,186 @@
+<MainScreen>:
+    name: "main"
+    tasks_container: tasks_container
+
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.97, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [30, 25]
+        spacing: 20
+
+        # ---------- Верхняя панель ----------
+        BoxLayout:
+            size_hint_y: 0.12
+            spacing: 15
+
+            Label:
+                text: "Smart Planner"
+                font_size: "30sp"
+                bold: True
+                color: 0.1, 0.15, 0.25, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Widget:
+
+        # ---------- Кнопки действий ----------
+        BoxLayout:
+            size_hint_y: 0.12
+            spacing: 15
+
+            Button:
+                text: "+ Добавить задачу"
+                font_size: "16sp"
+                bold: True
+                background_color: 0.15, 0.3, 0.6, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._go_to_task_editor()
+                canvas.before:
+                    Color:
+                        rgba: 0.15, 0.3, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [14]
+
+            Button:
+                text: "Календарь"
+                font_size: "16sp"
+                background_color: 0.1, 0.3, 0.2, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._go_to_calendar()
+                canvas.before:
+                    Color:
+                        rgba: 0.1, 0.3, 0.2, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [14]
+
+            Button:
+                text: "Статистика"
+                font_size: "16sp"
+                background_color: 0.4, 0.25, 0.05, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._go_to_statistics()
+                canvas.before:
+                    Color:
+                        rgba: 0.4, 0.25, 0.05, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [14]
+
+        # ---------- Разделительная линия ----------
+        BoxLayout:
+            size_hint_y: None
+            height: 2
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 0.08
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        # ---------- Заголовок списка задач ----------
+        Label:
+            text: "Ваши задачи на сегодня"
+            font_size: "20sp"
+            color: 0.15, 0.15, 0.25, 1
+            size_hint_y: 0.08
+            bold: True
+
+        # ---------- Список задач ----------
+        ScrollView:
+            do_scroll_x: False
+            bar_color: 0.5, 0.5, 0.8, 0.5
+            bar_width: 6
+            bar_inactive_color: 0.5, 0.5, 0.8, 0.3
+
+            BoxLayout:
+                id: tasks_container
+                orientation: "vertical"
+                size_hint_y: None
+                spacing: 15
+                padding: [5, 5, 5, 20]
+                height: self.minimum_height
+
+                # Карточка 1
+                BoxLayout:
+                    size_hint_y: None
+                    height: 90
+                    padding: [15, 10]
+                    orientation: "vertical"
+                    spacing: 5
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16]
+                        Color:
+                            rgba: 0.8, 0.85, 0.9, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                            width: 1
+
+                    Label:
+                        text: "Решить задачу по физике (A уровень)"
+                        font_size: "17sp"
+                        color: 0.1, 0.1, 0.1, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                    Label:
+                        text: "Срок: Сегодня, 18:00"
+                        font_size: "13sp"
+                        color: 0.35, 0.35, 0.35, 1
+                        halign: "left"
+                        text_size: self.size
+
+                # Карточка 2
+                BoxLayout:
+                    size_hint_y: None
+                    height: 90
+                    padding: [15, 10]
+                    orientation: "vertical"
+                    spacing: 5
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16]
+                        Color:
+                            rgba: 0.8, 0.85, 0.9, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                            width: 1
+
+                    Label:
+                        text: "Повторить формулы по термодинамике"
+                        font_size: "17sp"
+                        color: 0.1, 0.1, 0.1, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                    Label:
+                        text: "Срок: Завтра, 12:00"
+                        font_size: "13sp"
+                        color: 0.35, 0.35, 0.35, 1
+                        halign: "left"
+                        text_size: self.size
