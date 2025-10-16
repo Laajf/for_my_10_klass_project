@@ -1,0 +1,226 @@
+<CalendarScreen>:
+    name: "calendar"
+    calendar_grid: calendar_grid
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [dp(10), dp(10)]
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 0.98, 0.98, 0.98, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Верхняя панель с заголовком и управлением
+        BoxLayout:
+            size_hint_y: None
+            height: dp(80)
+            padding: [dp(20), dp(10)]
+            spacing: dp(20)
+
+            # Левая часть - заголовок
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: 0.4
+                spacing: dp(2)
+
+                Label:
+                    text: root.current_month
+                    font_size: "24sp"
+                    bold: True
+                    color: 0.1, 0.1, 0.1, 1
+                    text_size: self.size
+                    halign: "left"
+                    valign: "bottom"
+
+                Label:
+                    text: root.current_year
+                    font_size: "16sp"
+                    color: 0.5, 0.5, 0.5, 1
+                    text_size: self.size
+                    halign: "left"
+                    valign: "top"
+
+            # Правая часть - кнопки управления
+            BoxLayout:
+                size_hint_x: 0.6
+                spacing: dp(10)
+
+                Button:
+                    text: "Сегодня"
+                    font_size: "14sp"
+                    background_color: 0.26, 0.55, 0.96, 1
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    size_hint_x: 0.3
+                    on_press: root._go_to_today()
+
+                Button:
+                    text: "<"
+                    font_size: "18sp"
+                    background_color: 0.95, 0.95, 0.95, 1
+                    background_normal: ""
+                    color: 0.3, 0.3, 0.3, 1
+                    size_hint_x: 0.2
+                    on_press: root._prev_month()
+
+                Button:
+                    text: ">"
+                    font_size: "18sp"
+                    background_color: 0.95, 0.95, 0.95, 1
+                    background_normal: ""
+                    color: 0.3, 0.3, 0.3, 1
+                    size_hint_x: 0.2
+                    on_press: root._next_month()
+
+                Button:
+                    text: "Добавить"
+                    font_size: "14sp"
+                    background_color: 0.26, 0.55, 0.96, 1
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    size_hint_x: 0.3
+                    on_press: root.manager.current = 'task_editor'
+
+        # Дни недели
+        GridLayout:
+            cols: 7
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(1)
+
+            Label:
+                text: "ПН"
+                font_size: "12sp"
+                bold: True
+                color: 0.5, 0.5, 0.5, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ВТ"
+                font_size: "12sp"
+                bold: True
+                color: 0.5, 0.5, 0.5, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "СР"
+                font_size: "12sp"
+                bold: True
+                color: 0.5, 0.5, 0.5, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ЧТ"
+                font_size: "12sp"
+                bold: True
+                color: 0.5, 0.5, 0.5, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ПТ"
+                font_size: "12sp"
+                bold: True
+                color: 0.5, 0.5, 0.5, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "СБ"
+                font_size: "12sp"
+                bold: True
+                color: 0.2, 0.47, 0.84, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ВС"
+                font_size: "12sp"
+                bold: True
+                color: 0.9, 0.26, 0.21, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+
+        # Сетка календаря
+        GridLayout:
+            id: calendar_grid
+            cols: 7
+            spacing: dp(1)
+            size_hint_y: 1
+
+        # Панель выбранного дня
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(100) if root.selected_day > 0 else dp(60)
+            padding: [dp(20), dp(10)]
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                Line:
+                    width: 1
+                    points: [self.x, self.y, self.x + self.width, self.y]
+
+            Label:
+                text: "{} {}".format(root.selected_day, root.current_month) if root.selected_day > 0 else "Выберите день"
+                font_size: "16sp"
+                bold: True
+                size_hint_y: None
+                height: dp(30)
+                color: 0.1, 0.1, 0.1, 1
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+
+            ScrollView:
+                size_hint_y: 1
+                do_scroll_x: False
+                do_scroll_y: True
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(70) if root.selected_day > 0 else dp(30)
+                    padding: [0, dp(5)]
+
+                    Label:
+                        text: "На этот день задачи не запланированы" if root.selected_day > 0 else "Выберите день для просмотра задач"
+                        font_size: "14sp"
+                        color: 0.6, 0.6, 0.6, 1
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+
+        # Нижняя панель
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+
+            Button:
+                text: "На главную"
+                font_size: "14sp"
+                background_color: 0.95, 0.95, 0.95, 1
+                background_normal: ""
+                color: 0.3, 0.3, 0.3, 1
+                on_press: root._go_to_main()
+
+<CalendarDay@Button>:
+    font_size: '14sp'
+    size_hint_y: None
+    height: dp(50)
+    background_color: 1, 1, 1, 1
+    background_normal: ''
+    color: 0.2, 0.2, 0.2, 1
+    bold: False

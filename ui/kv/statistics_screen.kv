@@ -1,0 +1,96 @@
+<StatisticsScreen>:
+    name: "statistics"
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 15
+
+        Label:
+            text: "Статистика продуктивности"
+            font_size: "24sp"
+            bold: True
+            size_hint_y: 0.1
+            color: 0.1, 0.15, 0.25, 1
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 15
+
+            BoxLayout:
+                size_hint_y: 0.2
+                spacing: 15
+
+                BoxLayout:
+                    orientation: "vertical"
+                    padding: 10
+                    canvas.before:
+                        Color:
+                            rgba: 0.9, 0.95, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12]
+                    Label:
+                        text: "Выполнено задач"
+                        font_size: "16sp"
+                        color: 0.1, 0.1, 0.1, 1
+                    Label:
+                        text: "0"
+                        font_size: "24sp"
+                        bold: True
+                        color: 0.1, 0.3, 0.6, 1
+
+                BoxLayout:
+                    orientation: "vertical"
+                    padding: 10
+                    canvas.before:
+                        Color:
+                            rgba: 0.9, 0.95, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12]
+                    Label:
+                        text: "Продуктивность"
+                        font_size: "16sp"
+                        color: 0.1, 0.1, 0.1, 1
+                    Label:
+                        text: "0%"
+                        font_size: "24sp"
+                        bold: True
+                        color: 0.1, 0.3, 0.6, 1
+
+            Label:
+                text: "График продуктивности"
+                font_size: "18sp"
+                bold: True
+                size_hint_y: 0.1
+                color: 0.1, 0.15, 0.25, 1
+
+            BoxLayout:
+                size_hint_y: 0.4
+                padding: 10
+                canvas.before:
+                    Color:
+                        rgba: 0.9, 0.95, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [12]
+                Label:
+                    text: "График будет отображаться здесь"
+                    font_size: "16sp"
+                    color: 0.3, 0.3, 0.3, 1
+                    halign: "center"
+
+        BoxLayout:
+            size_hint_y: 0.15
+            spacing: 15
+            padding: [0, 10]
+
+            Button:
+                text: "Назад"
+                background_color: 0.6, 0.6, 0.6, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._go_to_main()

@@ -1,0 +1,101 @@
+<TaskEditorScreen>:
+    name: "task_editor"
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 15
+
+        Label:
+            text: "Создание задачи"
+            font_size: "24sp"
+            bold: True
+            size_hint_y: 0.1
+            color: 0.1, 0.15, 0.25, 1
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 10
+            padding: [0, 10]
+
+            TextInput:
+                id: task_title
+                hint_text: "Название задачи"
+                size_hint_y: 0.15
+                multiline: False
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.1, 0.1, 0.1, 1
+                padding: [15, 10]
+                font_size: '16sp'
+
+            TextInput:
+                id: task_description
+                hint_text: "Описание"
+                size_hint_y: 0.3
+                multiline: True
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.1, 0.1, 0.1, 1
+                padding: [15, 10]
+                font_size: '16sp'
+
+            Label:
+                text: "Приоритет:"
+                font_size: "16sp"
+                size_hint_y: 0.08
+                color: 0.1, 0.1, 0.1, 1
+
+            BoxLayout:
+                size_hint_y: 0.15
+                spacing: 10
+
+                ToggleButton:
+                    text: "Высокий"
+                    group: "priority"
+                    background_color: 0.8, 0.2, 0.2, 1
+                    background_normal: ""
+
+                ToggleButton:
+                    text: "Средний"
+                    group: "priority"
+                    background_color: 0.9, 0.6, 0.1, 1
+                    background_normal: ""
+
+                ToggleButton:
+                    text: "Низкий"
+                    group: "priority"
+                    background_color: 0.2, 0.6, 0.2, 1
+                    background_normal: ""
+
+            BoxLayout:
+                size_hint_y: 0.15
+                spacing: 10
+
+                Button:
+                    text: "Выбрать дату"
+                    background_color: 0.4, 0.4, 0.8, 1
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+
+                Button:
+                    text: "Установить напоминание"
+                    background_color: 0.4, 0.4, 0.8, 1
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+
+        BoxLayout:
+            size_hint_y: 0.15
+            spacing: 15
+            padding: [0, 10]
+
+            Button:
+                text: "Сохранить"
+                background_color: 0.15, 0.3, 0.6, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._save_task()
+
+            Button:
+                text: "Отмена"
+                background_color: 0.6, 0.6, 0.6, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._go_to_main()

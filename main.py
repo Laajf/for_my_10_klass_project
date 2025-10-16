@@ -1,7 +1,6 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 
-
 class SmartPlannerApp(App):
     def build(self):
         from ui.screens.main_screen import MainScreen
@@ -16,7 +15,6 @@ class SmartPlannerApp(App):
         sm.add_widget(StatisticsScreen(name='statistics'))
 
         return sm
-
 
 if __name__ == '__main__':
     SmartPlannerApp().run()
