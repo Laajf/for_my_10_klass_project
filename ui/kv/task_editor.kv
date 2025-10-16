@@ -1,101 +1,298 @@
 <TaskEditorScreen>:
     name: "task_editor"
+    
     BoxLayout:
         orientation: "vertical"
-        padding: 20
-        spacing: 15
+        padding: [dp(15), dp(15)]
+        spacing: 0
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.97, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
-        Label:
-            text: "Создание задачи"
-            font_size: "24sp"
-            bold: True
+        # Чистый заголовок с иконкой назад
+        BoxLayout:
             size_hint_y: 0.1
-            color: 0.1, 0.15, 0.25, 1
-
-        BoxLayout:
-            orientation: "vertical"
-            spacing: 10
-            padding: [0, 10]
-
-            TextInput:
-                id: task_title
-                hint_text: "Название задачи"
-                size_hint_y: 0.15
-                multiline: False
-                background_color: 1, 1, 1, 1
-                foreground_color: 0.1, 0.1, 0.1, 1
-                padding: [15, 10]
-                font_size: '16sp'
-
-            TextInput:
-                id: task_description
-                hint_text: "Описание"
-                size_hint_y: 0.3
-                multiline: True
-                background_color: 1, 1, 1, 1
-                foreground_color: 0.1, 0.1, 0.1, 1
-                padding: [15, 10]
-                font_size: '16sp'
-
-            Label:
-                text: "Приоритет:"
-                font_size: "16sp"
-                size_hint_y: 0.08
-                color: 0.1, 0.1, 0.1, 1
-
-            BoxLayout:
-                size_hint_y: 0.15
-                spacing: 10
-
-                ToggleButton:
-                    text: "Высокий"
-                    group: "priority"
-                    background_color: 0.8, 0.2, 0.2, 1
-                    background_normal: ""
-
-                ToggleButton:
-                    text: "Средний"
-                    group: "priority"
-                    background_color: 0.9, 0.6, 0.1, 1
-                    background_normal: ""
-
-                ToggleButton:
-                    text: "Низкий"
-                    group: "priority"
-                    background_color: 0.2, 0.6, 0.2, 1
-                    background_normal: ""
-
-            BoxLayout:
-                size_hint_y: 0.15
-                spacing: 10
-
-                Button:
-                    text: "Выбрать дату"
-                    background_color: 0.4, 0.4, 0.8, 1
-                    background_normal: ""
-                    color: 1, 1, 1, 1
-
-                Button:
-                    text: "Установить напоминание"
-                    background_color: 0.4, 0.4, 0.8, 1
-                    background_normal: ""
-                    color: 1, 1, 1, 1
-
-        BoxLayout:
-            size_hint_y: 0.15
-            spacing: 15
-            padding: [0, 10]
+            padding: [0, dp(10)]
 
             Button:
-                text: "Сохранить"
+                text: "<"
+                font_size: "20sp"
+                size_hint_x: 0.15
+                background_color: 0, 0, 0, 0
+                background_normal: ""
+                color: 0.15, 0.3, 0.6, 1
+                bold: True
+                on_press: root._go_to_main()
+
+            Label:
+                text: "Новая задача"
+                font_size: "18sp"
+                bold: True
+                color: 0.1, 0.15, 0.25, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+
+            Widget:
+                size_hint_x: 0.15
+
+        # Основной контент
+        ScrollView:
+            do_scroll_x: False
+            bar_color: 0.5, 0.5, 0.8, 0.3
+            bar_width: 4
+            bar_inactive_color: 0.5, 0.5, 0.8, 0.1
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(25)
+                padding: [dp(10), dp(20)]
+
+                # Название задачи
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(80)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "НАЗВАНИЕ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.4
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    TextInput:
+                        id: task_title
+                        hint_text: "Введите название задачи..."
+                        size_hint_y: 0.6
+                        multiline: False
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.1, 0.1, 0.1, 1
+                        padding: [dp(15), dp(10)]
+                        font_size: '16sp'
+                        cursor_color: 0.15, 0.3, 0.6, 1
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [10]
+                            Color:
+                                rgba: 0.8, 0.85, 0.9, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
+                                width: 1
+
+                # Описание задачи
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(140)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ОПИСАНИЕ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.2
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    TextInput:
+                        id: task_description
+                        hint_text: "Добавьте описание задачи..."
+                        size_hint_y: 0.8
+                        multiline: True
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.1, 0.1, 0.1, 1
+                        padding: [dp(15), dp(10)]
+                        font_size: '15sp'
+                        cursor_color: 0.15, 0.3, 0.6, 1
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [10]
+                            Color:
+                                rgba: 0.8, 0.85, 0.9, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
+                                width: 1
+
+                # Приоритет
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(80)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ПРИОРИТЕТ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    BoxLayout:
+                        id: priority_box
+                        size_hint_y: 0.7
+                        spacing: dp(8)
+
+                        ToggleButton:
+                            id: high_priority
+                            text: "ВЫСОКИЙ"
+                            group: "priority"
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            color: (1, 1, 1, 1)
+                            font_size: '12sp'
+                            bold: True
+                            on_state: root.on_priority_change(self)
+                            canvas.before:
+                                Color:
+                                    rgba: 0.8, 0.2, 0.2, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                        ToggleButton:
+                            id: medium_priority
+                            text: "СРЕДНИЙ"
+                            group: "priority"
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            color: (1, 1, 1, 1)
+                            font_size: '12sp'
+                            bold: True
+                            on_state: root.on_priority_change(self)
+                            state: 'down'
+                            canvas.before:
+                                Color:
+                                    rgba: 0.9, 0.6, 0.1, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                        ToggleButton:
+                            id: low_priority
+                            text: "НИЗКИЙ"
+                            group: "priority"
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            color: (1, 1, 1, 1)
+                            font_size: '12sp'
+                            bold: True
+                            on_state: root.on_priority_change(self)
+                            canvas.before:
+                                Color:
+                                    rgba: 0.2, 0.6, 0.2, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                # Дата и напоминания
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(80)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ДАТА И ВРЕМЯ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    BoxLayout:
+                        size_hint_y: 0.7
+                        spacing: dp(8)
+
+                        Button:
+                            text: "ВЫБРАТЬ ДАТУ"
+                            font_size: "12sp"
+                            background_color: 0.95, 0.96, 0.98, 1
+                            background_normal: ""
+                            color: 0.3, 0.3, 0.4, 1
+                            bold: True
+                            on_press: root._select_date()
+                            canvas.before:
+                                Color:
+                                    rgba: 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                        Button:
+                            text: "НАПОМИНАНИЕ"
+                            font_size: "12sp"
+                            background_color: 0.95, 0.96, 0.98, 1
+                            background_normal: ""
+                            color: 0.3, 0.3, 0.4, 1
+                            bold: True
+                            on_press: root._set_reminder()
+                            canvas.before:
+                                Color:
+                                    rgba: 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+        # Фиксированная нижняя панель
+        BoxLayout:
+            size_hint_y: 0.12
+            spacing: dp(15)
+            padding: [dp(10), dp(5)]
+
+            Button:
+                text: "ОТМЕНА"
+                font_size: "14sp"
+                background_color: 0.95, 0.96, 0.98, 1
+                background_normal: ""
+                color: 0.4, 0.4, 0.5, 1
+                bold: True
+                on_press: root._go_to_main()
+                canvas.before:
+                    Color:
+                        rgba: 0.95, 0.96, 0.98, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10]
+
+            Button:
+                text: "СОХРАНИТЬ"
+                font_size: "14sp"
+                bold: True
                 background_color: 0.15, 0.3, 0.6, 1
                 background_normal: ""
                 color: 1, 1, 1, 1
                 on_press: root._save_task()
-
-            Button:
-                text: "Отмена"
-                background_color: 0.6, 0.6, 0.6, 1
-                background_normal: ""
-                color: 1, 1, 1, 1
-                on_press: root._go_to_main()
+                canvas.before:
+                    Color:
+                        rgba: 0.15, 0.3, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10]
