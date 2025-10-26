@@ -1,96 +1,237 @@
 <StatisticsScreen>:
     name: "statistics"
+
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.97, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     BoxLayout:
         orientation: "vertical"
-        padding: 20
-        spacing: 15
+        padding: [30, 25]
+        spacing: 20
 
-        Label:
-            text: "Статистика продуктивности"
-            font_size: "24sp"
-            bold: True
-            size_hint_y: 0.1
-            color: 0.1, 0.15, 0.25, 1
-
+        # ---------- Верхняя панель ----------
         BoxLayout:
-            orientation: "vertical"
+            size_hint_y: 0.12
             spacing: 15
-
-            BoxLayout:
-                size_hint_y: 0.2
-                spacing: 15
-
-                BoxLayout:
-                    orientation: "vertical"
-                    padding: 10
-                    canvas.before:
-                        Color:
-                            rgba: 0.9, 0.95, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12]
-                    Label:
-                        text: "Выполнено задач"
-                        font_size: "16sp"
-                        color: 0.1, 0.1, 0.1, 1
-                    Label:
-                        text: "0"
-                        font_size: "24sp"
-                        bold: True
-                        color: 0.1, 0.3, 0.6, 1
-
-                BoxLayout:
-                    orientation: "vertical"
-                    padding: 10
-                    canvas.before:
-                        Color:
-                            rgba: 0.9, 0.95, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12]
-                    Label:
-                        text: "Продуктивность"
-                        font_size: "16sp"
-                        color: 0.1, 0.1, 0.1, 1
-                    Label:
-                        text: "0%"
-                        font_size: "24sp"
-                        bold: True
-                        color: 0.1, 0.3, 0.6, 1
 
             Label:
-                text: "График продуктивности"
-                font_size: "18sp"
+                text: "Статистика продуктивности"
+                font_size: "30sp"
                 bold: True
-                size_hint_y: 0.1
                 color: 0.1, 0.15, 0.25, 1
-
-            BoxLayout:
-                size_hint_y: 0.4
-                padding: 10
-                canvas.before:
-                    Color:
-                        rgba: 0.9, 0.95, 1, 1
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [12]
-                Label:
-                    text: "График будет отображаться здесь"
-                    font_size: "16sp"
-                    color: 0.3, 0.3, 0.3, 1
-                    halign: "center"
-
-        BoxLayout:
-            size_hint_y: 0.15
-            spacing: 15
-            padding: [0, 10]
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
 
             Button:
                 text: "Назад"
-                background_color: 0.6, 0.6, 0.6, 1
+                size_hint_x: 0.3
+                background_color: 0.15, 0.3, 0.6, 1
                 background_normal: ""
                 color: 1, 1, 1, 1
+                font_size: "16sp"
+                bold: True
                 on_press: root._go_to_main()
+                canvas.before:
+                    Color:
+                        rgba: 0.15, 0.3, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [14]
+
+        # ---------- Основная статистика ----------
+        GridLayout:
+            cols: 2
+            spacing: 15
+            size_hint_y: 0.25
+
+            # Карточка выполненных задач
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Выполнено задач"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: str(root.completed_tasks)
+                    font_size: "28sp"
+                    bold: True
+                    color: 0.15, 0.3, 0.6, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+            # Карточка продуктивности
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Продуктивность"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: "{}%".format(root.productivity_percent)
+                    font_size: "28sp"
+                    bold: True
+                    color: 0.15, 0.3, 0.6, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+        # ---------- Дополнительная статистика ----------
+        GridLayout:
+            cols: 2
+            spacing: 15
+            size_hint_y: 0.25
+
+            # Среднее время выполнения
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Среднее время"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: "25 мин"
+                    font_size: "22sp"
+                    bold: True
+                    color: 0.1, 0.3, 0.2, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+            # Лучший день
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Лучший день"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: "Понедельник"
+                    font_size: "22sp"
+                    bold: True
+                    color: 0.4, 0.25, 0.05, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+        # ---------- Разделительная линия ----------
+        BoxLayout:
+            size_hint_y: None
+            height: 2
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 0.08
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        # ---------- Заголовок графика ----------
+        Label:
+            text: "График продуктивности"
+            font_size: "20sp"
+            color: 0.15, 0.15, 0.25, 1
+            size_hint_y: 0.08
+            bold: True
+
+        # ---------- Область графика ----------
+        BoxLayout:
+            size_hint_y: 0.3
+            padding: [10, 15]
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [16]
+                Color:
+                    rgba: 0.8, 0.85, 0.9, 1
+                Line:
+                    rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                    width: 1
+
+            Label:
+                text: "График будет отображаться здесь"
+                font_size: "16sp"
+                color: 0.5, 0.5, 0.5, 1
+                halign: "center"
+                valign: "middle"
+                text_size: self.size
