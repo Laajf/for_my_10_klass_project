@@ -18,9 +18,9 @@
             padding: [0, dp(10)]
 
             Button:
-                text: "<"
-                font_size: "20sp"
-                size_hint_x: 0.15
+                text: "< Назад"
+                font_size: "16sp"
+                size_hint_x: 0.3
                 background_color: 0, 0, 0, 0
                 background_normal: ""
                 color: 0.15, 0.3, 0.6, 1
@@ -37,7 +37,7 @@
                 valign: "middle"
 
             Widget:
-                size_hint_x: 0.15
+                size_hint_x: 0.3
 
         # Основной контент
         ScrollView:
@@ -79,6 +79,8 @@
                         padding: [dp(15), dp(10)]
                         font_size: '16sp'
                         cursor_color: 0.15, 0.3, 0.6, 1
+                        write_tab: False
+                        focus: True
                         canvas.before:
                             Color:
                                 rgba: 1, 1, 1, 1
@@ -118,6 +120,7 @@
                         padding: [dp(15), dp(10)]
                         font_size: '15sp'
                         cursor_color: 0.15, 0.3, 0.6, 1
+                        write_tab: False
                         canvas.before:
                             Color:
                                 rgba: 1, 1, 1, 1
@@ -158,7 +161,7 @@
                             group: "priority"
                             background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: (1, 1, 1, 1)
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
                             font_size: '12sp'
                             bold: True
                             on_state: root.on_priority_change(self)
@@ -176,7 +179,7 @@
                             group: "priority"
                             background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: (1, 1, 1, 1)
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
                             font_size: '12sp'
                             bold: True
                             on_state: root.on_priority_change(self)
@@ -195,7 +198,7 @@
                             group: "priority"
                             background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: (1, 1, 1, 1)
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
                             font_size: '12sp'
                             bold: True
                             on_state: root.on_priority_change(self)
@@ -228,7 +231,8 @@
                         spacing: dp(8)
 
                         Button:
-                            text: "ВЫБРАТЬ ДАТУ"
+                            id: date_button
+                            text: "ЗАВТРА, 12:00"
                             font_size: "12sp"
                             background_color: 0.95, 0.96, 0.98, 1
                             background_normal: ""
@@ -244,7 +248,8 @@
                                     radius: [8]
 
                         Button:
-                            text: "НАПОМИНАНИЕ"
+                            id: reminder_button
+                            text: "НАПОМИНАНИЕ ЗА 30 МИН"
                             font_size: "12sp"
                             background_color: 0.95, 0.96, 0.98, 1
                             background_normal: ""

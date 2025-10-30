@@ -12,18 +12,72 @@ if os.path.exists(kv_path):
     Builder.load_file(kv_path)
 
 
+class CalendarDayButton:
+    """Простой класс для создания дней календаря с гарантированным отображением цифр"""
+
+    @staticmethod
+    def create(day, is_today=False, is_selected=False, is_weekend=False, task_count=0, on_press_callback=None):
+        from kivy.uix.button import Button
+
+        # Базовые цвета
+        if is_selected:
+            bg_color = (0.2, 0.6, 1, 1)  # Синий
+            text_color = (1, 1, 1, 1)  # Белый
+        elif is_today:
+            bg_color = (0.9, 0.95, 1, 1)  # Светло-синий
+            text_color = (0.2, 0.6, 1, 1)  # Синий
+        elif is_weekend:
+            bg_color = (1, 1, 1, 1)  # Белый
+            text_color = (0.8, 0.2, 0.2, 1)  # Красный
+        else:
+            bg_color = (1, 1, 1, 1)  # Белый
+            text_color = (0.1, 0.1, 0.1, 1)  # Черный
+
+        # Создаем текст кнопки - просто число
+        button_text = str(day)
+
+        # Если есть задачи, добавляем точку после числа
+        if task_count > 0:
+            button_text += "\n•"
+
+        # Создаем кнопку
+        day_button = Button(
+            text=button_text,
+            size_hint_y=None,
+            height=dp(60),
+            background_color=bg_color,
+            background_normal='',
+            color=text_color,
+            font_size='18sp',
+            bold=True,
+            halign='center',
+            valign='middle'
+        )
+
+        # Обработчик нажатия
+        if on_press_callback:
+            day_button.bind(on_press=lambda instance: on_press_callback(day))
+
+        return day_button
+
+
 class CalendarScreen(Screen):
-    """Современный экран календаря в стиле Google Calendar."""
+    """Упрощенный экран календаря с гарантированным отображением цифр"""
 
     current_month = StringProperty("")
     current_year = StringProperty("")
     calendar_grid = ObjectProperty(None)
     selected_day = NumericProperty(0)
+    selected_date = ObjectProperty(None)
+    selected_day_info_text = StringProperty("Выберите день для просмотра задач")
 
-    def __init__(self, **kwargs):
+    def __init__(self, task_service=None, **kwargs):
         super().__init__(**kwargs)
+        self.task_service = task_service
         self.current_date = datetime.now()
         self.selected_day = self.current_date.day
+        self.selected_date = self.current_date
+        self.tasks_for_selected_day = []
         Clock.schedule_once(self._update_calendar, 0.1)
 
     def on_enter(self, *args):
@@ -52,7 +106,7 @@ class CalendarScreen(Screen):
         first_weekday = first_day.weekday()  # 0-6, где 0 - понедельник
         for _ in range(first_weekday):
             from kivy.uix.widget import Widget
-            self.calendar_grid.add_widget(Widget(size_hint_y=None, height=dp(50)))
+            self.calendar_grid.add_widget(Widget(size_hint_y=None, height=dp(60)))
 
         # Добавляем дни месяца
         today = datetime.now()
@@ -63,58 +117,68 @@ class CalendarScreen(Screen):
             is_selected = (day == self.selected_day)
             is_weekend = (first_weekday + day - 1) % 7 >= 5  # Суббота и воскресенье
 
-            day_widget = self._create_day_widget(day, is_today, is_selected, is_weekend)
+            # Получаем задачи для этого дня
+            day_date = self.current_date.replace(day=day)
+            day_tasks = []
+            if self.task_service:
+                try:
+                    day_tasks = self.task_service.get_tasks_by_date(day_date)
+                except Exception as e:
+                    print(f"CalendarScreen: Ошибка загрузки задач: {e}")
+
+            day_widget = CalendarDayButton.create(
+                day=day,
+                is_today=is_today,
+                is_selected=is_selected,
+                is_weekend=is_weekend,
+                task_count=len(day_tasks),
+                on_press_callback=self._on_day_selected
+            )
             self.calendar_grid.add_widget(day_widget)
 
-    def _create_day_widget(self, day, is_today=False, is_selected=False, is_weekend=False):
-        """Создает современный виджет дня в стиле Google Calendar."""
-        from kivy.uix.button import Button
+        # Обновляем информацию о выбранном дне
+        self._update_selected_day_info()
 
-        # Базовые стили
-        bg_color = (1, 1, 1, 1)  # Белый фон
-        text_color = (0.2, 0.2, 0.2, 1)  # Темно-серый текст
+    def _update_selected_day_info(self):
+        """Обновляет информацию о задачах выбранного дня"""
+        if not self.selected_day:
+            self.selected_day_info_text = "Выберите день для просмотра задач"
+            return
 
-        if is_weekend:
-            text_color = (0.9, 0.26, 0.21, 1)  # Красный для выходных
+        # Получаем задачи для выбранного дня
+        selected_date = self.current_date.replace(day=self.selected_day)
+        self.tasks_for_selected_day = []
 
-        if is_selected:
-            bg_color = (0.26, 0.55, 0.96, 1)  # Синий для выбранного дня
-            text_color = (1, 1, 1, 1)  # Белый текст
-        elif is_today:
-            bg_color = (0.92, 0.95, 1, 1)  # Светло-синий для сегодня
-            text_color = (0.26, 0.55, 0.96, 1)  # Синий текст
+        if self.task_service:
+            try:
+                self.tasks_for_selected_day = self.task_service.get_tasks_by_date(selected_date)
+            except Exception as e:
+                print(f"CalendarScreen: Ошибка загрузки задач: {e}")
 
-        day_button = Button(
-            text=str(day),
-            size_hint_y=None,
-            height=dp(50),
-            background_color=bg_color,
-            background_normal='',
-            color=text_color,
-            font_size='14sp',
-            bold=is_today or is_selected
-        )
+        # Обновляем текст информации
+        if self.tasks_for_selected_day:
+            task_text = f"Задачи на {self.selected_day} {self.current_month}:\n\n"
+            for task in self.tasks_for_selected_day:
+                status_icon = "✓" if task.status.value == "Выполнена" else "○"
+                priority_color = self._get_priority_color(task.priority.value)
+                task_text += f"{status_icon} [color={priority_color}]●[/color] {task.title}\n"
+            self.selected_day_info_text = task_text
+        else:
+            self.selected_day_info_text = f"На {self.selected_day} {self.current_month} задачи не запланированы"
 
-        # Добавляем эффект тени для выбранного дня
-        if is_selected:
-            day_button.canvas.before.clear()
-            with day_button.canvas.before:
-                from kivy.graphics import Color, RoundedRectangle
-                Color(*bg_color)
-                RoundedRectangle(
-                    pos=(day_button.x + dp(2), day_button.y + dp(2)),
-                    size=(day_button.width - dp(4), day_button.height - dp(4)),
-                    radius=[dp(20)]
-                )
-
-        # Обработчик нажатия
-        day_button.bind(on_press=lambda instance: self._on_day_selected(day))
-
-        return day_button
+    def _get_priority_color(self, priority):
+        """Возвращает цвет приоритета в hex"""
+        colors = {
+            "Высокий": "ff4444",  # Красный
+            "Средний": "ffaa00",  # Оранжевый
+            "Низкий": "44ff44"  # Зеленый
+        }
+        return colors.get(priority, "888888")
 
     def _on_day_selected(self, day):
         """Обрабатывает выбор дня."""
         self.selected_day = day
+        self.selected_date = self.current_date.replace(day=day)
         self._update_calendar()
 
     def _get_month_name(self, month_num):

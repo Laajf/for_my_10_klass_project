@@ -1,0 +1,119 @@
+<TaskCard>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(80) if root.description else dp(60)
+    padding: [dp(16), dp(12)]
+    spacing: dp(12)
+
+    canvas.before:
+        # Фон карточки - чистый белый
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
+
+        # Тонкая граница
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(8)]
+            width: 1
+
+    # Чекбокс выполнения
+    BoxLayout:
+        size_hint_x: None
+        width: dp(24)
+        padding: [0, dp(4), 0, 0]
+
+        Button:
+            size_hint: None, None
+            size: dp(20), dp(20)
+            background_color: 0, 0, 0, 0
+            background_normal: ''
+            on_press: root.toggle_completion()
+            canvas.before:
+                # Круг для чекбокса
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1 if not root.is_completed else root.priority_color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+
+                # Галочка
+                Color:
+                    rgba: 1, 1, 1, 1 if root.is_completed else 0
+                Line:
+                    points: [self.x + dp(5), self.y + dp(10), self.x + dp(9), self.y + dp(14), self.x + dp(15), self.y + dp(6)]
+                    width: dp(2)
+                    cap: 'round'
+                    joint: 'round'
+
+    # Основное содержимое
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(4)
+
+        # Первая строка: заголовок и приоритет
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.6
+            spacing: dp(8)
+
+            # Заголовок задачи
+            Label:
+                text: root.title
+                font_size: '16sp'
+                bold: True
+                color: (0.2, 0.2, 0.2, 1) if not root.is_completed else (0.6, 0.6, 0.6, 1)
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.width, None
+                shorten: True
+                shorten_from: 'right'
+
+            # Индикатор приоритета
+            Widget:
+                size_hint_x: None
+                width: dp(4)
+                canvas.before:
+                    Color:
+                        rgba: root.priority_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(2)]
+
+        # Вторая строка: описание и дата (только если есть описание)
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.4
+            spacing: dp(8)
+
+            # Описание
+            Label:
+                text: root.description
+                font_size: '14sp'
+                color: 0.5, 0.5, 0.5, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.width, None
+                shorten: True
+                shorten_from: 'right'
+                opacity: 1 if root.description else 0
+
+            # Дата и время
+            BoxLayout:
+                size_hint_x: None
+                width: dp(70) if root.time_text != "Неизвестно" else dp(50)
+                orientation: 'horizontal'
+                spacing: dp(4)
+
+                Label:
+                    text: root.date_text
+                    font_size: '12sp'
+                    color: 0.6, 0.6, 0.6, 1
+                    halign: 'right'
+                    valign: 'middle'
+                    text_size: self.width, None
