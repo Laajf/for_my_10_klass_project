@@ -4,106 +4,116 @@
 
     canvas.before:
         Color:
-            rgba: 0.98, 0.98, 0.98, 1
+            rgba: 0.97, 0.98, 0.99, 1
         Rectangle:
             pos: self.pos
             size: self.size
 
     BoxLayout:
         orientation: "vertical"
-        padding: [dp(15), dp(15)]
-        spacing: dp(10)
+        padding: [dp(20), dp(20)]
+        spacing: dp(14)
 
         # ---------- Верхняя панель ----------
         BoxLayout:
             size_hint_y: None
-            height: dp(50)
-            spacing: dp(10)
+            height: dp(56)
+            spacing: dp(12)
 
             Label:
                 text: "Календарь"
                 font_size: "24sp"
                 bold: True
-                color: 0.1, 0.15, 0.25, 1
+                color: 0.12, 0.18, 0.3, 1
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
 
             BoxLayout:
-                size_hint_x: 0.7
-                spacing: dp(5)
+                size_hint_x: 0.75
+                spacing: dp(6)
 
                 Button:
                     text: "Сегодня"
                     font_size: "12sp"
-                    background_color: 0.2, 0.6, 1, 1
+                    background_color: 0, 0, 0, 0
                     background_normal: ""
                     color: 1, 1, 1, 1
                     on_press: root._go_to_today()
                     canvas.before:
                         Color:
-                            rgba: 0.2, 0.6, 1, 1
+                            rgba: 0.25, 0.65, 0.95, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                            radius: [dp(8)]
+                            radius: [dp(10)]
 
                 Button:
-                    text: "<"
-                    font_size: "14sp"
-                    background_color: 0.95, 0.95, 0.95, 1
+                    text: "◀"
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0
                     background_normal: ""
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.4, 0.4, 0.5, 1
                     on_press: root._prev_month()
                     canvas.before:
                         Color:
-                            rgba: 0.95, 0.95, 0.95, 1
+                            rgba: 0.97, 0.98, 0.99, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                            radius: [dp(8)]
+                            radius: [dp(10)]
+                        Color:
+                            rgba: 0.85, 0.88, 0.92, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(10)]
+                            width: 1.5
 
                 Button:
-                    text: ">"
-                    font_size: "14sp"
-                    background_color: 0.95, 0.95, 0.95, 1
+                    text: "▶"
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0
                     background_normal: ""
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.4, 0.4, 0.5, 1
                     on_press: root._next_month()
                     canvas.before:
                         Color:
-                            rgba: 0.95, 0.95, 0.95, 1
+                            rgba: 0.97, 0.98, 0.99, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                            radius: [dp(8)]
+                            radius: [dp(10)]
+                        Color:
+                            rgba: 0.85, 0.88, 0.92, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(10)]
+                            width: 1.5
 
                 Button:
                     text: "Назад"
                     font_size: "12sp"
-                    background_color: 0.2, 0.6, 1, 1
+                    background_color: 0, 0, 0, 0
                     background_normal: ""
                     color: 1, 1, 1, 1
                     on_press: root._go_to_main()
                     canvas.before:
                         Color:
-                            rgba: 0.2, 0.6, 1, 1
+                            rgba: 0.6, 0.7, 0.8, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                            radius: [dp(8)]
+                            radius: [dp(10)]
 
         # ---------- Заголовок месяца ----------
         BoxLayout:
             size_hint_y: None
-            height: dp(30)
-            padding: [0, dp(5)]
+            height: dp(36)
+            padding: [0, dp(8)]
 
             Label:
                 text: "{} {}".format(root.current_month, root.current_year)
-                font_size: "18sp"
+                font_size: "20sp"
                 bold: True
-                color: 0.1, 0.15, 0.25, 1
+                color: 0.12, 0.18, 0.3, 1
                 halign: "center"
                 valign: "middle"
                 text_size: self.size
@@ -112,62 +122,63 @@
         GridLayout:
             cols: 7
             size_hint_y: None
-            height: dp(25)
-            spacing: dp(2)
+            height: dp(32)
+            spacing: dp(3)
+            padding: [dp(8), 0]
 
             Label:
                 text: "ПН"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.4, 0.4, 0.4, 1
+                color: 0.45, 0.45, 0.55, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
             Label:
                 text: "ВТ"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.4, 0.4, 0.4, 1
+                color: 0.45, 0.45, 0.55, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
             Label:
                 text: "СР"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.4, 0.4, 0.4, 1
+                color: 0.45, 0.45, 0.55, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
             Label:
                 text: "ЧТ"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.4, 0.4, 0.4, 1
+                color: 0.45, 0.45, 0.55, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
             Label:
                 text: "ПТ"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.4, 0.4, 0.4, 1
+                color: 0.45, 0.45, 0.55, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
             Label:
                 text: "СБ"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.8, 0.2, 0.2, 1
+                color: 0.9, 0.3, 0.3, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
             Label:
                 text: "ВС"
-                font_size: "12sp"
+                font_size: "13sp"
                 bold: True
-                color: 0.8, 0.2, 0.2, 1
+                color: 0.9, 0.3, 0.3, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
@@ -176,38 +187,28 @@
         GridLayout:
             id: calendar_grid
             cols: 7
-            spacing: dp(2)
+            spacing: dp(3)
+            padding: [dp(8), dp(8)]
             size_hint_y: 1.0
-
-        # ---------- Разделительная линия ----------
-        BoxLayout:
-            size_hint_y: None
-            height: dp(1)
-            canvas.before:
-                Color:
-                    rgba: 0.8, 0.8, 0.8, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
 
         # ---------- Панель выбранного дня ----------
         BoxLayout:
             orientation: "vertical"
             size_hint_y: None
-            height: dp(120)
-            padding: [dp(15), dp(10)]
+            height: dp(140)
+            padding: [dp(20), dp(15)]
             canvas.before:
                 Color:
                     rgba: 1, 1, 1, 1
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [dp(10)]
+                    radius: [dp(16)]
                 Color:
-                    rgba: 0.9, 0.9, 0.9, 1
+                    rgba: 0.88, 0.92, 0.96, 1
                 Line:
-                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(10)]
-                    width: 1
+                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                    width: 2
 
             # Заголовок выбранного дня
             Label:
@@ -215,7 +216,7 @@
                 font_size: "16sp"
                 bold: True
                 size_hint_y: 0.3
-                color: 0.1, 0.15, 0.25, 1
+                color: 0.12, 0.18, 0.3, 1
                 text_size: self.size
                 halign: "left"
                 valign: "middle"
@@ -224,14 +225,14 @@
             ScrollView:
                 size_hint_y: 0.7
                 do_scroll_x: False
-                bar_color: 0.2, 0.6, 1, 0.7
+                bar_color: 0.25, 0.65, 0.95, 0.7
                 bar_width: dp(4)
-                bar_inactive_color: 0.2, 0.6, 1, 0.3
+                bar_inactive_color: 0.25, 0.65, 0.95, 0.3
 
                 Label:
                     text: root.selected_day_info_text
                     font_size: "14sp"
-                    color: 0.4, 0.4, 0.4, 1
+                    color: 0.45, 0.45, 0.55, 1
                     text_size: self.width, None
                     size_hint_y: None
                     height: self.texture_size[1]

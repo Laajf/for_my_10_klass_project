@@ -3,157 +3,172 @@
     
     BoxLayout:
         orientation: "vertical"
-        padding: [dp(15), dp(15)]
+        padding: [dp(20), dp(20)]
         spacing: 0
         canvas.before:
             Color:
-                rgba: 0.95, 0.97, 1, 1
+                rgba: 0.97, 0.98, 0.99, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
 
-        # Чистый заголовок с иконкой назад
+        # ---------- Верхняя панель ----------
         BoxLayout:
-            size_hint_y: 0.1
+            size_hint_y: None
+            height: dp(70)
             padding: [0, dp(10)]
 
             Button:
-                text: "< Назад"
+                text: "‹ Назад"
                 font_size: "16sp"
-                size_hint_x: 0.3
+                size_hint_x: 0.25
                 background_color: 0, 0, 0, 0
                 background_normal: ""
-                color: 0.15, 0.3, 0.6, 1
+                color: 0.25, 0.65, 0.95, 1
                 bold: True
                 on_press: root._go_to_main()
+                canvas.before:
+                    Color:
+                        rgba: 0.92, 0.96, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(12)]
 
             Label:
                 text: "Новая задача"
-                font_size: "18sp"
+                font_size: "22sp"
                 bold: True
-                color: 0.1, 0.15, 0.25, 1
+                color: 0.12, 0.18, 0.3, 1
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
 
             Widget:
-                size_hint_x: 0.3
+                size_hint_x: 0.25
 
-        # Основной контент
+        # ---------- Основной контент с прокруткой ----------
         ScrollView:
             do_scroll_x: False
-            bar_color: 0.5, 0.5, 0.8, 0.3
-            bar_width: 4
-            bar_inactive_color: 0.5, 0.5, 0.8, 0.1
+            bar_color: 0.25, 0.65, 0.95, 0.7
+            bar_width: dp(5)
+            bar_inactive_color: 0.25, 0.65, 0.95, 0.3
+            scroll_type: ['bars', 'content']
+            effect_cls: "ScrollEffect"
 
             BoxLayout:
                 orientation: "vertical"
                 size_hint_y: None
                 height: self.minimum_height
-                spacing: dp(25)
-                padding: [dp(10), dp(20)]
+                spacing: dp(28)
+                padding: [dp(20), dp(25), dp(20), dp(25)]
 
-                # Название задачи
+                # ---------- Название задачи ----------
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
-                    height: dp(80)
-                    spacing: dp(8)
+                    height: dp(85)
+                    spacing: dp(10)
 
                     Label:
-                        text: "НАЗВАНИЕ"
-                        font_size: "12sp"
-                        color: 0.4, 0.4, 0.5, 1
-                        size_hint_y: 0.4
+                        text: "НАЗВАНИЕ ЗАДАЧИ"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.35
                         text_size: self.size
                         halign: "left"
                         valign: "bottom"
+                        bold: True
 
                     TextInput:
                         id: task_title
-                        hint_text: "Введите название задачи..."
-                        size_hint_y: 0.6
+                        hint_text: "Что нужно сделать?..."
+                        size_hint_y: 0.65
                         multiline: False
                         background_color: 1, 1, 1, 1
-                        foreground_color: 0.1, 0.1, 0.1, 1
-                        padding: [dp(15), dp(10)]
-                        font_size: '16sp'
-                        cursor_color: 0.15, 0.3, 0.6, 1
+                        foreground_color: 0.12, 0.18, 0.3, 1
+                        padding: [dp(18), dp(14)]
+                        font_size: '17sp'
+                        cursor_color: 0.25, 0.65, 0.95, 1
                         write_tab: False
                         focus: True
+                        hint_text_color: 0.7, 0.7, 0.8, 1
                         canvas.before:
                             Color:
                                 rgba: 1, 1, 1, 1
                             RoundedRectangle:
                                 pos: self.pos
                                 size: self.size
-                                radius: [10]
+                                radius: [dp(14)]
                             Color:
-                                rgba: 0.8, 0.85, 0.9, 1
+                                rgba: 0.88, 0.92, 0.96, 1
                             Line:
-                                rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
-                                width: 1
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
 
-                # Описание задачи
+                # ---------- Описание задачи ----------
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
-                    height: dp(140)
-                    spacing: dp(8)
+                    height: dp(150)
+                    spacing: dp(10)
 
                     Label:
                         text: "ОПИСАНИЕ"
-                        font_size: "12sp"
-                        color: 0.4, 0.4, 0.5, 1
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
                         size_hint_y: 0.2
                         text_size: self.size
                         halign: "left"
                         valign: "bottom"
+                        bold: True
 
                     TextInput:
                         id: task_description
-                        hint_text: "Добавьте описание задачи..."
+                        hint_text: "Добавьте подробности (необязательно)..."
                         size_hint_y: 0.8
                         multiline: True
                         background_color: 1, 1, 1, 1
-                        foreground_color: 0.1, 0.1, 0.1, 1
-                        padding: [dp(15), dp(10)]
-                        font_size: '15sp'
-                        cursor_color: 0.15, 0.3, 0.6, 1
+                        foreground_color: 0.12, 0.18, 0.3, 1
+                        padding: [dp(18), dp(14)]
+                        font_size: '16sp'
+                        cursor_color: 0.25, 0.65, 0.95, 1
                         write_tab: False
+                        hint_text_color: 0.7, 0.7, 0.8, 1
                         canvas.before:
                             Color:
                                 rgba: 1, 1, 1, 1
                             RoundedRectangle:
                                 pos: self.pos
                                 size: self.size
-                                radius: [10]
+                                radius: [dp(14)]
                             Color:
-                                rgba: 0.8, 0.85, 0.9, 1
+                                rgba: 0.88, 0.92, 0.96, 1
                             Line:
-                                rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
-                                width: 1
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
 
-                # Приоритет
+                # ---------- Приоритет ----------
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
-                    height: dp(80)
-                    spacing: dp(8)
+                    height: dp(85)
+                    spacing: dp(10)
 
                     Label:
                         text: "ПРИОРИТЕТ"
-                        font_size: "12sp"
-                        color: 0.4, 0.4, 0.5, 1
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
                         size_hint_y: 0.3
                         text_size: self.size
                         halign: "left"
                         valign: "bottom"
+                        bold: True
 
                     BoxLayout:
                         id: priority_box
                         size_hint_y: 0.7
-                        spacing: dp(8)
+                        spacing: dp(12)
 
                         ToggleButton:
                             id: high_priority
@@ -161,17 +176,22 @@
                             group: "priority"
                             background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.95, 0.35, 0.35, 1)
                             font_size: '12sp'
                             bold: True
                             on_state: root.on_priority_change(self)
                             canvas.before:
                                 Color:
-                                    rgba: 0.8, 0.2, 0.2, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                    rgba: 0.95, 0.35, 0.35, 1 if self.state == 'down' else 0.99, 0.97, 0.97, 1
                                 RoundedRectangle:
                                     pos: self.pos
                                     size: self.size
-                                    radius: [8]
+                                    radius: [dp(12)]
+                                Color:
+                                    rgba: 0.95, 0.35, 0.35, 0.8 if self.state == 'down' else 0.95, 0.35, 0.35, 0.4
+                                Line:
+                                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+                                    width: 2 if self.state == 'down' else 1.5
 
                         ToggleButton:
                             id: medium_priority
@@ -179,18 +199,23 @@
                             group: "priority"
                             background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
+                            color: (1, 1, 1, 1) if self.state == 'down' else (1.0, 0.7, 0.2, 1)
                             font_size: '12sp'
                             bold: True
                             on_state: root.on_priority_change(self)
                             state: 'down'
                             canvas.before:
                                 Color:
-                                    rgba: 0.9, 0.6, 0.1, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                    rgba: 1.0, 0.7, 0.2, 1 if self.state == 'down' else 0.99, 0.98, 0.95, 1
                                 RoundedRectangle:
                                     pos: self.pos
                                     size: self.size
-                                    radius: [8]
+                                    radius: [dp(12)]
+                                Color:
+                                    rgba: 1.0, 0.7, 0.2, 0.8 if self.state == 'down' else 1.0, 0.7, 0.2, 0.4
+                                Line:
+                                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+                                    width: 2 if self.state == 'down' else 1.5
 
                         ToggleButton:
                             id: low_priority
@@ -198,106 +223,188 @@
                             group: "priority"
                             background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.75, 0.35, 1)
                             font_size: '12sp'
                             bold: True
                             on_state: root.on_priority_change(self)
                             canvas.before:
                                 Color:
-                                    rgba: 0.2, 0.6, 0.2, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                    rgba: 0.3, 0.75, 0.35, 1 if self.state == 'down' else 0.97, 0.99, 0.97, 1
                                 RoundedRectangle:
                                     pos: self.pos
                                     size: self.size
-                                    radius: [8]
+                                    radius: [dp(12)]
+                                Color:
+                                    rgba: 0.3, 0.75, 0.35, 0.8 if self.state == 'down' else 0.3, 0.75, 0.35, 0.4
+                                Line:
+                                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+                                    width: 2 if self.state == 'down' else 1.5
 
-                # Дата и напоминания
+                # ---------- Дата и время ----------
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
-                    height: dp(80)
-                    spacing: dp(8)
+                    height: dp(130)
+                    spacing: dp(10)
 
                     Label:
                         text: "ДАТА И ВРЕМЯ"
-                        font_size: "12sp"
-                        color: 0.4, 0.4, 0.5, 1
-                        size_hint_y: 0.3
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.2
                         text_size: self.size
                         halign: "left"
                         valign: "bottom"
+                        bold: True
 
+                    # Контейнер для даты и времени
                     BoxLayout:
-                        size_hint_y: 0.7
-                        spacing: dp(8)
+                        orientation: "vertical"
+                        size_hint_y: 0.8
+                        spacing: dp(12)
 
+                        # Кнопка выбора даты
                         Button:
                             id: date_button
-                            text: "ЗАВТРА, 12:00"
-                            font_size: "12sp"
-                            background_color: 0.95, 0.96, 0.98, 1
+                            text: "ЗАВТРА"
+                            font_size: "14sp"
+                            background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: 0.3, 0.3, 0.4, 1
+                            color: 0.25, 0.65, 0.95, 1
                             bold: True
                             on_press: root._select_date()
+                            size_hint_y: 0.5
                             canvas.before:
                                 Color:
-                                    rgba: 0.95, 0.96, 0.98, 1
+                                    rgba: 0.92, 0.96, 1, 1
                                 RoundedRectangle:
                                     pos: self.pos
                                     size: self.size
-                                    radius: [8]
+                                    radius: [dp(14)]
+                                Color:
+                                    rgba: 0.25, 0.65, 0.95, 0.6
+                                Line:
+                                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                    width: 1.8
+                            canvas.after:
+                                Color:
+                                    rgba: 0.25, 0.65, 0.95, 1
+                                Triangle:
+                                    points: [self.right - dp(40), self.center_y - dp(4), self.right - dp(22), self.center_y - dp(4), self.right - dp(31), self.center_y + dp(6)]
 
+                        # Кнопка выбора времени
                         Button:
-                            id: reminder_button
-                            text: "НАПОМИНАНИЕ ЗА 30 МИН"
-                            font_size: "12sp"
-                            background_color: 0.95, 0.96, 0.98, 1
+                            id: time_button
+                            text: "12:00"
+                            font_size: "14sp"
+                            background_color: 0, 0, 0, 0
                             background_normal: ""
-                            color: 0.3, 0.3, 0.4, 1
+                            color: 0.25, 0.65, 0.95, 1
                             bold: True
-                            on_press: root._set_reminder()
+                            on_press: root._select_time()
+                            size_hint_y: 0.5
                             canvas.before:
                                 Color:
-                                    rgba: 0.95, 0.96, 0.98, 1
+                                    rgba: 0.92, 0.96, 1, 1
                                 RoundedRectangle:
                                     pos: self.pos
                                     size: self.size
-                                    radius: [8]
+                                    radius: [dp(14)]
+                                Color:
+                                    rgba: 0.25, 0.65, 0.95, 0.6
+                                Line:
+                                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                    width: 1.8
+                            canvas.after:
+                                Color:
+                                    rgba: 0.25, 0.65, 0.95, 1
+                                Triangle:
+                                    points: [self.right - dp(40), self.center_y - dp(4), self.right - dp(22), self.center_y - dp(4), self.right - dp(31), self.center_y + dp(6)]
 
-        # Фиксированная нижняя панель
+                # ---------- Напоминание ----------
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(75)
+                    spacing: dp(10)
+
+                    Label:
+                        text: "НАПОМИНАНИЕ"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.4
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    Button:
+                        text: "НАПОМНИТЬ ЗА 30 МИНУТ"
+                        font_size: "12sp"
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        color: 0.5, 0.5, 0.6, 1
+                        bold: True
+                        on_press: root._set_reminder()
+                        size_hint_y: 0.6
+                        canvas.before:
+                            Color:
+                                rgba: 0.97, 0.98, 0.99, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(12)]
+                            Color:
+                                rgba: 0.85, 0.88, 0.92, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+                                width: 1.5
+
+        # ---------- Фиксированная нижняя панель ----------
         BoxLayout:
-            size_hint_y: 0.12
-            spacing: dp(15)
-            padding: [dp(10), dp(5)]
+            size_hint_y: None
+            height: dp(80)
+            spacing: dp(16)
+            padding: [dp(12), dp(12)]
 
             Button:
                 text: "ОТМЕНА"
-                font_size: "14sp"
-                background_color: 0.95, 0.96, 0.98, 1
+                font_size: "15sp"
+                background_color: 0, 0, 0, 0
                 background_normal: ""
-                color: 0.4, 0.4, 0.5, 1
+                color: 0.6, 0.6, 0.7, 1
                 bold: True
                 on_press: root._go_to_main()
                 canvas.before:
                     Color:
-                        rgba: 0.95, 0.96, 0.98, 1
+                        rgba: 0.97, 0.98, 0.99, 1
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [10]
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 0.85, 0.88, 0.92, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+                        width: 1.8
 
             Button:
                 text: "СОХРАНИТЬ"
-                font_size: "14sp"
+                font_size: "16sp"
                 bold: True
-                background_color: 0.15, 0.3, 0.6, 1
+                background_color: 0, 0, 0, 0
                 background_normal: ""
                 color: 1, 1, 1, 1
                 on_press: root._save_task()
                 canvas.before:
                     Color:
-                        rgba: 0.15, 0.3, 0.6, 1
+                        rgba: 0.25, 0.65, 0.95, 1
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [10]
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 0.18, 0.55, 0.85, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+                        width: 2

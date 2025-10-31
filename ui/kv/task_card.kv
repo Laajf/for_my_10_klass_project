@@ -1,72 +1,79 @@
 <TaskCard>:
     orientation: 'horizontal'
     size_hint_y: None
-    height: dp(80) if root.description else dp(60)
-    padding: [dp(16), dp(12)]
-    spacing: dp(12)
+    height: dp(85) if root.description else dp(70)
+    padding: [dp(18), dp(14)]
+    spacing: dp(14)
 
     canvas.before:
-        # Фон карточки - чистый белый
+        # Фон карточки с легкой тенью
         Color:
             rgba: 1, 1, 1, 1
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(8)]
+            radius: [dp(12)]
 
-        # Тонкая граница
+        # Градиентная граница
         Color:
-            rgba: 0.9, 0.9, 0.9, 1
+            rgba: 0.92, 0.95, 0.98, 1
         Line:
-            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(8)]
-            width: 1
+            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
+            width: 1.5
 
     # Чекбокс выполнения
     BoxLayout:
         size_hint_x: None
-        width: dp(24)
-        padding: [0, dp(4), 0, 0]
+        width: dp(28)
+        padding: [0, dp(6), 0, 0]
 
         Button:
             size_hint: None, None
-            size: dp(20), dp(20)
+            size: dp(24), dp(24)
             background_color: 0, 0, 0, 0
             background_normal: ''
             on_press: root.toggle_completion()
             canvas.before:
-                # Круг для чекбокса
+                # Круг для чекбокса с градиентом
                 Color:
-                    rgba: 0.9, 0.9, 0.9, 1 if not root.is_completed else root.priority_color
+                    rgba: 0.9, 0.95, 1, 1 if not root.is_completed else root.priority_color
                 Ellipse:
                     pos: self.pos
                     size: self.size
 
+                # Внутренний круг
+                Color:
+                    rgba: 1, 1, 1, 1
+                Ellipse:
+                    pos: [self.x + dp(2), self.y + dp(2)]
+                    size: [self.width - dp(4), self.height - dp(4)]
+
                 # Галочка
                 Color:
-                    rgba: 1, 1, 1, 1 if root.is_completed else 0
+                    rgba: root.priority_color if root.is_completed else 0, 0, 0, 0
                 Line:
-                    points: [self.x + dp(5), self.y + dp(10), self.x + dp(9), self.y + dp(14), self.x + dp(15), self.y + dp(6)]
-                    width: dp(2)
+                    points: [self.x + dp(6), self.y + dp(12), self.x + dp(10), self.y + dp(16), self.x + dp(18), self.y + dp(8)]
+                    width: dp(2.5)
                     cap: 'round'
                     joint: 'round'
 
     # Основное содержимое
     BoxLayout:
         orientation: 'vertical'
-        spacing: dp(4)
+        spacing: dp(6)
 
         # Первая строка: заголовок и приоритет
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.6
-            spacing: dp(8)
+            spacing: dp(10)
 
             # Заголовок задачи
             Label:
                 text: root.title
                 font_size: '16sp'
                 bold: True
-                color: (0.2, 0.2, 0.2, 1) if not root.is_completed else (0.6, 0.6, 0.6, 1)
+                color: (0.15, 0.2, 0.3, 1) if not root.is_completed else (0.7, 0.7, 0.7, 1)
                 halign: 'left'
                 valign: 'middle'
                 text_size: self.width, None
@@ -76,26 +83,26 @@
             # Индикатор приоритета
             Widget:
                 size_hint_x: None
-                width: dp(4)
+                width: dp(6)
                 canvas.before:
                     Color:
                         rgba: root.priority_color
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [dp(2)]
+                        radius: [dp(3)]
 
-        # Вторая строка: описание и дата (только если есть описание)
+        # Вторая строка: описание и дата
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.4
-            spacing: dp(8)
+            spacing: dp(10)
 
             # Описание
             Label:
                 text: root.description
                 font_size: '14sp'
-                color: 0.5, 0.5, 0.5, 1
+                color: 0.55, 0.55, 0.65, 1
                 halign: 'left'
                 valign: 'middle'
                 text_size: self.width, None
@@ -106,14 +113,14 @@
             # Дата и время
             BoxLayout:
                 size_hint_x: None
-                width: dp(70) if root.time_text != "Неизвестно" else dp(50)
+                width: dp(80)
                 orientation: 'horizontal'
                 spacing: dp(4)
 
                 Label:
-                    text: root.date_text
+                    text: root.time_text
                     font_size: '12sp'
-                    color: 0.6, 0.6, 0.6, 1
+                    color: 0.65, 0.65, 0.75, 1
                     halign: 'right'
                     valign: 'middle'
                     text_size: self.width, None

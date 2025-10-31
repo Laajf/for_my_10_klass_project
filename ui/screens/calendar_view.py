@@ -36,7 +36,7 @@ class CalendarDayButton:
         # Создаем текст кнопки - просто число
         button_text = str(day)
 
-        # Если есть задачи, добавляем точку после числа
+        # Если есть задачи, добавляем индикатор
         if task_count > 0:
             button_text += "\n•"
 
@@ -74,14 +74,15 @@ class CalendarScreen(Screen):
     def __init__(self, task_service=None, **kwargs):
         super().__init__(**kwargs)
         self.task_service = task_service
-        self.current_date = datetime.now()
-        self.selected_day = self.current_date.day
-        self.selected_date = self.current_date
+        self.current_date = datetime.now().replace(day=1)  # Начинаем с первого дня месяца
+        self.selected_day = datetime.now().day
+        self.selected_date = datetime.now()
         self.tasks_for_selected_day = []
         Clock.schedule_once(self._update_calendar, 0.1)
 
     def on_enter(self, *args):
         """Вызывается при входе на экран"""
+        print("CalendarScreen: Вход на экран")
         self._update_calendar()
 
     def _go_to_main(self):
@@ -90,6 +91,7 @@ class CalendarScreen(Screen):
     def _update_calendar(self, dt=None):
         """Обновляет отображение календаря."""
         if not self.calendar_grid:
+            print("CalendarScreen: calendar_grid не найден")
             return
 
         self.calendar_grid.clear_widgets()
@@ -114,11 +116,13 @@ class CalendarScreen(Screen):
             is_today = (day == today.day and
                         self.current_date.month == today.month and
                         self.current_date.year == today.year)
-            is_selected = (day == self.selected_day)
+            is_selected = (day == self.selected_day and
+                           self.current_date.month == today.month and
+                           self.current_date.year == today.year)
             is_weekend = (first_weekday + day - 1) % 7 >= 5  # Суббота и воскресенье
 
             # Получаем задачи для этого дня
-            day_date = self.current_date.replace(day=day)
+            day_date = datetime(self.current_date.year, self.current_date.month, day)
             day_tasks = []
             if self.task_service:
                 try:
@@ -146,7 +150,7 @@ class CalendarScreen(Screen):
             return
 
         # Получаем задачи для выбранного дня
-        selected_date = self.current_date.replace(day=self.selected_day)
+        selected_date = datetime(self.current_date.year, self.current_date.month, self.selected_day)
         self.tasks_for_selected_day = []
 
         if self.task_service:
@@ -158,10 +162,13 @@ class CalendarScreen(Screen):
         # Обновляем текст информации
         if self.tasks_for_selected_day:
             task_text = f"Задачи на {self.selected_day} {self.current_month}:\n\n"
-            for task in self.tasks_for_selected_day:
+            for i, task in enumerate(self.tasks_for_selected_day):
                 status_icon = "✓" if task.status.value == "Выполнена" else "○"
                 priority_color = self._get_priority_color(task.priority.value)
                 task_text += f"{status_icon} [color={priority_color}]●[/color] {task.title}\n"
+                if i >= 4:  # Ограничиваем количество отображаемых задач
+                    task_text += f"... и еще {len(self.tasks_for_selected_day) - 5} задач"
+                    break
             self.selected_day_info_text = task_text
         else:
             self.selected_day_info_text = f"На {self.selected_day} {self.current_month} задачи не запланированы"
@@ -178,7 +185,8 @@ class CalendarScreen(Screen):
     def _on_day_selected(self, day):
         """Обрабатывает выбор дня."""
         self.selected_day = day
-        self.selected_date = self.current_date.replace(day=day)
+        self.selected_date = datetime(self.current_date.year, self.current_date.month, day)
+        print(f"CalendarScreen: Выбран день {day}")
         self._update_calendar()
 
     def _get_month_name(self, month_num):
@@ -201,24 +209,42 @@ class CalendarScreen(Screen):
 
     def _prev_month(self):
         """Переход к предыдущему месяцу."""
-        if self.current_date.month == 1:
-            self.current_date = self.current_date.replace(year=self.current_date.year - 1, month=12)
-        else:
-            self.current_date = self.current_date.replace(month=self.current_date.month - 1)
-        self.selected_day = 0
-        self._update_calendar()
+        try:
+            if self.current_date.month == 1:
+                new_year = self.current_date.year - 1
+                new_month = 12
+            else:
+                new_year = self.current_date.year
+                new_month = self.current_date.month - 1
+
+            self.current_date = datetime(new_year, new_month, 1)
+            self.selected_day = 0
+            print(f"CalendarScreen: Переход к {new_month}/{new_year}")
+            self._update_calendar()
+        except Exception as e:
+            print(f"CalendarScreen: Ошибка перехода к предыдущему месяцу: {e}")
 
     def _next_month(self):
         """Переход к следующему месяцу."""
-        if self.current_date.month == 12:
-            self.current_date = self.current_date.replace(year=self.current_date.year + 1, month=1)
-        else:
-            self.current_date = self.current_date.replace(month=self.current_date.month + 1)
-        self.selected_day = 0
-        self._update_calendar()
+        try:
+            if self.current_date.month == 12:
+                new_year = self.current_date.year + 1
+                new_month = 1
+            else:
+                new_year = self.current_date.year
+                new_month = self.current_date.month + 1
+
+            self.current_date = datetime(new_year, new_month, 1)
+            self.selected_day = 0
+            print(f"CalendarScreen: Переход к {new_month}/{new_year}")
+            self._update_calendar()
+        except Exception as e:
+            print(f"CalendarScreen: Ошибка перехода к следующему месяцу: {e}")
 
     def _go_to_today(self):
         """Переход к текущему дню."""
-        self.current_date = datetime.now()
-        self.selected_day = self.current_date.day
+        today = datetime.now()
+        self.current_date = today.replace(day=1)
+        self.selected_day = today.day
+        print("CalendarScreen: Переход к сегодняшнему дню")
         self._update_calendar()

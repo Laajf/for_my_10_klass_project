@@ -52,10 +52,11 @@ class TaskService:
         today = datetime.now().date()
         all_tasks = self.get_all_tasks()
         today_tasks = [task for task in all_tasks if
-                       task.due_date.date() == today and task.status != TaskStatus.COMPLETED]
+                      task.due_date.date() == today and
+                      task.status != TaskStatus.COMPLETED]
         print(f"Задачи на сегодня: {len(today_tasks)}")
         for task in today_tasks:
-            print(f"  - {task.title} (дата: {task.due_date})")
+            print(f"  - {task.title} (статус: {task.status.value}, дата: {task.due_date.date()})")
         return today_tasks
 
     def complete_task(self, task_id: str):
@@ -89,5 +90,5 @@ class TaskService:
         tasks = self.task_repository.get_tasks_by_date(date)
         print(f"Задачи на {date.date()}: {len(tasks)}")
         for task in tasks:
-            print(f"  - {task.title}")
+            print(f"  - {task.title} (статус: {task.status.value})")
         return tasks

@@ -1,0 +1,2692 @@
+СТРУКТУРА ПРОЕКТА: SMART PLANNER
+Корневая директория: /Users/admin/Desktop/for_my_10_klass_project
+================================================================================
+📄 .DS_Store
+
+================================================================================
+ФАЙЛ: .DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+📁 assets/
+    📄 .DS_Store
+
+================================================================================
+ФАЙЛ: assets/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+    📁 fonts/
+    📁 icons/
+📁 core/
+    📄 .DS_Store
+
+================================================================================
+ФАЙЛ: core/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+    📄 __init__.py
+
+================================================================================
+ФАЙЛ: core/__init__.py
+================================================================================
+
+================================================================================
+    📄 exceptions.py
+
+================================================================================
+ФАЙЛ: core/exceptions.py
+================================================================================
+class TaskNotFoundException(Exception):
+    pass
+
+class InvalidTaskDataException(Exception):
+    pass
+================================================================================
+    📄 models.py
+
+================================================================================
+ФАЙЛ: core/models.py
+================================================================================
+from enum import Enum
+from datetime import datetime
+from dataclasses import dataclass
+from typing import Optional
+
+
+class Priority(Enum):
+    LOW = "Низкий"
+    MEDIUM = "Средний"
+    HIGH = "Высокий"
+
+
+class TaskStatus(Enum):
+    PENDING = "Ожидает"
+    IN_PROGRESS = "В процессе"
+    COMPLETED = "Выполнена"
+    CANCELLED = "Отменена"
+
+
+@dataclass
+class Task:
+    id: str
+    title: str
+    description: str
+    priority: Priority
+    status: TaskStatus
+    due_date: datetime
+    created_date: datetime
+    completed_date: Optional[datetime] = None
+    reminder_time: Optional[datetime] = None
+
+    def __post_init__(self):
+        if isinstance(self.priority, str):
+            self.priority = Priority(self.priority)
+        if isinstance(self.status, str):
+            self.status = TaskStatus(self.status)
+
+
+@dataclass
+class Reminder:
+    id: str
+    task_id: str
+    reminder_time: datetime
+    is_sent: bool = False
+
+
+@dataclass
+class DailyStatistics:
+    date: datetime
+    total_tasks: int
+    completed_tasks: int
+    productivity_percent: float
+
+    @property
+    def completion_rate(self) -> float:
+        if self.total_tasks == 0:
+            return 0.0
+        return (self.completed_tasks / self.total_tasks) * 100
+================================================================================
+📄 create_project_structure.py
+
+================================================================================
+ФАЙЛ: create_project_structure.py
+================================================================================
+import os
+import glob
+
+
+def get_project_structure(root_dir):
+    """Собирает структуру проекта в текстовый файл"""
+
+    # Игнорируемые папки и файлы
+    ignore_dirs = {'__pycache__', '.git', '.idea', 'venv', 'env', 'node_modules'}
+    ignore_files = {'.DS_Store', '.gitignore', '*.pyc'}
+
+    output_lines = []
+
+    def should_include(path):
+        """Проверяет, нужно ли включать файл/папку в вывод"""
+        name = os.path.basename(path)
+        if name in ignore_dirs:
+            return False
+        if any(name.endswith(ext) for ext in ['.pyc', '.tmp']):
+            return False
+        return True
+
+    def add_file_content(file_path, relative_path):
+        """Добавляет содержимое файла в вывод"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            output_lines.append(f"\n{'=' * 80}\n")
+            output_lines.append(f"ФАЙЛ: {relative_path}\n")
+            output_lines.append(f"{'=' * 80}\n")
+            output_lines.append(content)
+            output_lines.append(f"\n{'=' * 80}\n")
+
+        except UnicodeDecodeError:
+            # Пропускаем бинарные файлы
+            output_lines.append(f"\n{'=' * 80}\n")
+            output_lines.append(f"ФАЙЛ: {relative_path} (бинарный файл, содержимое пропущено)\n")
+            output_lines.append(f"{'=' * 80}\n")
+        except Exception as e:
+            output_lines.append(f"\n{'=' * 80}\n")
+            output_lines.append(f"ФАЙЛ: {relative_path} (ошибка чтения: {str(e)})\n")
+            output_lines.append(f"{'=' * 80}\n")
+
+    def traverse_directory(current_dir, prefix=""):
+        """Рекурсивно обходит директории"""
+        try:
+            items = sorted(os.listdir(current_dir))
+
+            for item in items:
+                full_path = os.path.join(current_dir, item)
+                relative_path = os.path.relpath(full_path, root_dir)
+
+                if not should_include(full_path):
+                    continue
+
+                if os.path.isdir(full_path):
+                    # Добавляем информацию о папке
+                    output_lines.append(f"{prefix}📁 {item}/\n")
+                    traverse_directory(full_path, prefix + "    ")
+                else:
+                    # Добавляем информацию о файле и его содержимое
+                    output_lines.append(f"{prefix}📄 {item}\n")
+                    add_file_content(full_path, relative_path)
+
+        except PermissionError:
+            output_lines.append(f"{prefix}❌ [Нет доступа к папке]\n")
+        except Exception as e:
+            output_lines.append(f"{prefix}❌ [Ошибка: {str(e)}]\n")
+
+    # Заголовок
+    output_lines.append("СТРУКТУРА ПРОЕКТА: SMART PLANNER\n")
+    output_lines.append(f"Корневая директория: {root_dir}\n")
+    output_lines.append("=" * 80 + "\n")
+
+    # Начинаем обход с корневой директории
+    traverse_directory(root_dir)
+
+    return "".join(output_lines)
+
+
+def save_project_structure():
+    """Сохраняет структуру проекта в файл"""
+
+    # Определяем корневую директорию проекта
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Имя выходного файла
+    output_file = os.path.join(current_dir, "project_structure.txt")
+
+    print(f"Создание структуры проекта...")
+    print(f"Корневая директория: {current_dir}")
+    print(f"Выходной файл: {output_file}")
+
+    # Получаем структуру
+    structure = get_project_structure(current_dir)
+
+    # Сохраняем в файл
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(structure)
+
+    print(f"✅ Структура проекта сохранена в: {output_file}")
+    print(f"📊 Размер файла: {len(structure)} символов")
+
+    # Показываем статистику
+    lines = structure.split('\n')
+    file_count = structure.count('ФАЙЛ:')
+    dir_count = structure.count('📁')
+
+    print(f"📁 Папок: {dir_count}")
+    print(f"📄 Файлов: {file_count}")
+    print(f"📝 Строк: {len(lines)}")
+
+
+if __name__ == "__main__":
+    save_project_structure()
+================================================================================
+📄 main.py
+
+================================================================================
+ФАЙЛ: main.py
+================================================================================
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager
+
+
+class SmartPlannerApp(App):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.task_service = None
+        self.selected_task_id = None  # Для хранения выбранной задачи из календаря
+
+    def build(self):
+        from ui.screens.main_screen import MainScreen
+        from ui.screens.task_editor import TaskEditorScreen
+        from ui.screens.calendar_view import CalendarScreen
+        from ui.screens.statistics_screen import StatisticsScreen
+
+        # Инициализируем сервисы
+        from services.task_service import TaskService
+        self.task_service = TaskService()
+
+        # Передаем сервисы в экраны
+        sm = ScreenManager()
+        sm.add_widget(MainScreen(name='main', task_service=self.task_service))
+        sm.add_widget(TaskEditorScreen(name='task_editor', task_service=self.task_service))
+        sm.add_widget(CalendarScreen(name='calendar', task_service=self.task_service))
+        sm.add_widget(StatisticsScreen(name='statistics', task_service=self.task_service))
+
+        # Сохраняем ссылку на менеджер для доступа из экранов
+        self.sm = sm
+        return sm
+
+
+if __name__ == '__main__':
+    SmartPlannerApp().run()
+================================================================================
+📁 repository/
+    📄 .DS_Store
+
+================================================================================
+ФАЙЛ: repository/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+    📄 __init__.py
+
+================================================================================
+ФАЙЛ: repository/__init__.py
+================================================================================
+
+================================================================================
+    📄 reminder_repository.py
+
+================================================================================
+ФАЙЛ: repository/reminder_repository.py
+================================================================================
+
+================================================================================
+    📄 statistics_repository.py
+
+================================================================================
+ФАЙЛ: repository/statistics_repository.py
+================================================================================
+
+================================================================================
+    📄 task_repository.py
+
+================================================================================
+ФАЙЛ: repository/task_repository.py
+================================================================================
+import json
+import os
+from typing import List, Optional
+from datetime import datetime
+from core.models import Task, TaskStatus, Priority
+from core.exceptions import TaskNotFoundException
+from utils.config import ensure_data_dir, TASKS_FILE
+
+
+class TaskRepository:
+    def __init__(self, storage_file=TASKS_FILE):
+        ensure_data_dir()
+        self.storage_file = storage_file
+        self._ensure_storage_exists()
+
+    def _ensure_storage_exists(self):
+        """Создает файл хранилища если он не существует"""
+        if not os.path.exists(self.storage_file):
+            with open(self.storage_file, 'w', encoding='utf-8') as f:
+                json.dump([], f)
+
+    def _load_tasks(self) -> List[dict]:
+        """Загружает задачи из JSON файла"""
+        try:
+            with open(self.storage_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return []
+
+    def _save_tasks(self, tasks_data: List[dict]):
+        """Сохраняет задачи в JSON файл"""
+        with open(self.storage_file, 'w', encoding='utf-8') as f:
+            json.dump(tasks_data, f, indent=2, default=str, ensure_ascii=False)
+
+    def _task_to_dict(self, task: Task) -> dict:
+        """Конвертирует Task в словарь"""
+        return {
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'priority': task.priority.value,
+            'status': task.status.value,
+            'due_date': task.due_date.isoformat(),
+            'created_date': task.created_date.isoformat(),
+            'completed_date': task.completed_date.isoformat() if task.completed_date else None,
+            'reminder_time': task.reminder_time.isoformat() if task.reminder_time else None
+        }
+
+    def _dict_to_task(self, data: dict) -> Task:
+        """Конвертирует словарь в Task"""
+        # Импортируем здесь чтобы избежать циклических импортов
+        from core.models import Task, Priority, TaskStatus
+
+        # Обрабатываем даты
+        due_date = datetime.fromisoformat(data['due_date'])
+        created_date = datetime.fromisoformat(data['created_date'])
+        completed_date = datetime.fromisoformat(data['completed_date']) if data['completed_date'] else None
+        reminder_time = datetime.fromisoformat(data['reminder_time']) if data['reminder_time'] else None
+
+        # Создаем объект Priority и TaskStatus из строк
+        priority = Priority(data['priority'])
+        status = TaskStatus(data['status'])
+
+        return Task(
+            id=data['id'],
+            title=data['title'],
+            description=data['description'],
+            priority=priority,
+            status=status,
+            due_date=due_date,
+            created_date=created_date,
+            completed_date=completed_date,
+            reminder_time=reminder_time
+        )
+
+    def add_task(self, task: Task):
+        """Добавляет новую задачу"""
+        tasks_data = self._load_tasks()
+        tasks_data.append(self._task_to_dict(task))
+        self._save_tasks(tasks_data)
+
+    def get_task(self, task_id: str) -> Optional[Task]:
+        """Получает задачу по ID"""
+        tasks_data = self._load_tasks()
+        for task_data in tasks_data:
+            if task_data['id'] == task_id:
+                return self._dict_to_task(task_data)
+        return None
+
+    def get_all_tasks(self) -> List[Task]:
+        """Получает все задачи"""
+        tasks_data = self._load_tasks()
+        return [self._dict_to_task(task_data) for task_data in tasks_data]
+
+    def update_task(self, task: Task):
+        """Обновляет задачу"""
+        tasks_data = self._load_tasks()
+        task_found = False
+
+        for i, task_data in enumerate(tasks_data):
+            if task_data['id'] == task.id:
+                tasks_data[i] = self._task_to_dict(task)
+                task_found = True
+                break
+
+        if not task_found:
+            raise TaskNotFoundException(f"Task with id {task.id} not found")
+
+        self._save_tasks(tasks_data)
+
+    def delete_task(self, task_id: str):
+        """Удаляет задачу по ID"""
+        tasks_data = self._load_tasks()
+        initial_length = len(tasks_data)
+        tasks_data = [task for task in tasks_data if task['id'] != task_id]
+
+        if len(tasks_data) == initial_length:
+            raise TaskNotFoundException(f"Task with id {task_id} not found")
+
+        self._save_tasks(tasks_data)
+
+    def get_tasks_by_date(self, date: datetime) -> List[Task]:
+        """Получает задачи на определенную дату"""
+        all_tasks = self.get_all_tasks()
+        target_date = date.date()
+        return [task for task in all_tasks if task.due_date.date() == target_date]
+
+    def get_completed_tasks(self) -> List[Task]:
+        """Получает все выполненные задачи"""
+        all_tasks = self.get_all_tasks()
+        return [task for task in all_tasks if task.status == TaskStatus.COMPLETED]
+
+    def get_pending_tasks(self) -> List[Task]:
+        """Получает все невыполненные задачи"""
+        all_tasks = self.get_all_tasks()
+        return [task for task in all_tasks if task.status != TaskStatus.COMPLETED]
+
+    def get_tasks_by_priority(self, priority: Priority) -> List[Task]:
+        """Получает задачи по приоритету"""
+        all_tasks = self.get_all_tasks()
+        return [task for task in all_tasks if task.priority == priority]
+================================================================================
+📁 services/
+    📄 .DS_Store
+
+================================================================================
+ФАЙЛ: services/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+    📄 __init__.py
+
+================================================================================
+ФАЙЛ: services/__init__.py
+================================================================================
+
+================================================================================
+    📄 analytics_service.py
+
+================================================================================
+ФАЙЛ: services/analytics_service.py
+================================================================================
+
+================================================================================
+    📄 notification_service.py
+
+================================================================================
+ФАЙЛ: services/notification_service.py
+================================================================================
+from datetime import datetime
+from core.models import Task
+from plyer import notification
+import threading
+import time
+
+
+class NotificationService:
+    def __init__(self):
+        self.scheduled_reminders = {}
+
+    def schedule_reminder(self, task: Task):
+        """Планирует напоминание для задачи"""
+        if not task.reminder_time:
+            return
+
+        reminder_id = f"task_{task.id}"
+
+        # Отменяем существующее напоминание
+        self.cancel_reminder(task.id)
+
+        # Вычисляем задержку до напоминания
+        now = datetime.now()
+        delay = (task.reminder_time - now).total_seconds()
+
+        if delay > 0:
+            timer = threading.Timer(delay, self._show_notification, [task])
+            timer.start()
+            self.scheduled_reminders[task.id] = timer
+
+    def _show_notification(self, task: Task):
+        """Показывает уведомление"""
+        try:
+            notification.notify(
+                title=f"Напоминание: {task.title}",
+                message=f"Срок выполнения: {task.due_date.strftime('%H:%M')}",
+                timeout=10
+            )
+        except Exception as e:
+            print(f"Ошибка показа уведомления: {e}")
+
+    def cancel_reminder(self, task_id: str):
+        """Отменяет запланированное напоминание"""
+        if task_id in self.scheduled_reminders:
+            self.scheduled_reminders[task_id].cancel()
+            del self.scheduled_reminders[task_id]
+================================================================================
+    📄 reminder_service.py
+
+================================================================================
+ФАЙЛ: services/reminder_service.py
+================================================================================
+
+================================================================================
+    📄 task_service.py
+
+================================================================================
+ФАЙЛ: services/task_service.py
+================================================================================
+import uuid
+from datetime import datetime
+from typing import List, Optional
+from core.models import Task, TaskStatus, Priority
+from repository.task_repository import TaskRepository
+from services.notification_service import NotificationService
+from core.exceptions import InvalidTaskDataException
+
+
+class TaskService:
+    def __init__(self):
+        self.task_repository = TaskRepository()
+        self.notification_service = NotificationService()
+        print("TaskService инициализирован")
+
+    def create_task(self, title: str, description: str, priority: Priority, due_date: datetime,
+                    reminder_time: Optional[datetime] = None) -> Task:
+        """Создает новую задачу"""
+        print(f"Создание задачи: {title}, дата: {due_date}")
+
+        if not title or not title.strip():
+            raise InvalidTaskDataException("Title cannot be empty")
+
+        task = Task(
+            id=str(uuid.uuid4()),
+            title=title.strip(),
+            description=description.strip(),
+            priority=priority,
+            status=TaskStatus.PENDING,
+            due_date=due_date,
+            created_date=datetime.now(),
+            reminder_time=reminder_time
+        )
+
+        self.task_repository.add_task(task)
+        print(f"Задача сохранена в репозиторий: {task.title}")
+
+        # Планируем напоминание если указано
+        if reminder_time:
+            self.notification_service.schedule_reminder(task)
+
+        return task
+
+    def get_all_tasks(self) -> List[Task]:
+        """Получает все задачи"""
+        tasks = self.task_repository.get_all_tasks()
+        print(f"Загружено задач из репозитория: {len(tasks)}")
+        return tasks
+
+    def get_today_tasks(self) -> List[Task]:
+        """Получает задачи на сегодня"""
+        today = datetime.now().date()
+        all_tasks = self.get_all_tasks()
+        today_tasks = [task for task in all_tasks if
+                       task.due_date.date() == today and task.status != TaskStatus.COMPLETED]
+        print(f"Задачи на сегодня: {len(today_tasks)}")
+        for task in today_tasks:
+            print(f"  - {task.title} (дата: {task.due_date})")
+        return today_tasks
+
+    def complete_task(self, task_id: str):
+        """Отмечает задачу как выполненную"""
+        task = self.task_repository.get_task(task_id)
+        if task:
+            task.status = TaskStatus.COMPLETED
+            task.completed_date = datetime.now()
+            self.task_repository.update_task(task)
+
+            # Отменяем напоминание для выполненной задачи
+            self.notification_service.cancel_reminder(task_id)
+            print(f"Задача выполнена: {task.title}")
+
+    def update_task(self, task_id: str, **kwargs):
+        """Обновляет задачу"""
+        task = self.task_repository.get_task(task_id)
+        if task:
+            for key, value in kwargs.items():
+                if hasattr(task, key):
+                    setattr(task, key, value)
+            self.task_repository.update_task(task)
+
+    def delete_task(self, task_id: str):
+        """Удаляет задачу"""
+        self.notification_service.cancel_reminder(task_id)
+        self.task_repository.delete_task(task_id)
+
+    def get_tasks_by_date(self, date: datetime) -> List[Task]:
+        """Получает задачи на определенную дату"""
+        tasks = self.task_repository.get_tasks_by_date(date)
+        print(f"Задачи на {date.date()}: {len(tasks)}")
+        for task in tasks:
+            print(f"  - {task.title}")
+        return tasks
+================================================================================
+📄 tasks.json
+
+================================================================================
+ФАЙЛ: tasks.json
+================================================================================
+[]
+================================================================================
+📁 ui/
+    📄 .DS_Store
+
+================================================================================
+ФАЙЛ: ui/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+    📄 __init__.py
+
+================================================================================
+ФАЙЛ: ui/__init__.py
+================================================================================
+
+================================================================================
+    📁 kv/
+        📄 calendar_view.kv
+
+================================================================================
+ФАЙЛ: ui/kv/calendar_view.kv
+================================================================================
+<CalendarScreen>:
+    name: "calendar"
+    calendar_grid: calendar_grid
+
+    canvas.before:
+        Color:
+            rgba: 0.98, 0.98, 0.98, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [dp(15), dp(15)]
+        spacing: dp(10)
+
+        # ---------- Верхняя панель ----------
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+
+            Label:
+                text: "Календарь"
+                font_size: "24sp"
+                bold: True
+                color: 0.1, 0.15, 0.25, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            BoxLayout:
+                size_hint_x: 0.7
+                spacing: dp(5)
+
+                Button:
+                    text: "Сегодня"
+                    font_size: "12sp"
+                    background_color: 0.2, 0.6, 1, 1
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    on_press: root._go_to_today()
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.6, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(8)]
+
+                Button:
+                    text: "<"
+                    font_size: "14sp"
+                    background_color: 0.95, 0.95, 0.95, 1
+                    background_normal: ""
+                    color: 0.3, 0.3, 0.3, 1
+                    on_press: root._prev_month()
+                    canvas.before:
+                        Color:
+                            rgba: 0.95, 0.95, 0.95, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(8)]
+
+                Button:
+                    text: ">"
+                    font_size: "14sp"
+                    background_color: 0.95, 0.95, 0.95, 1
+                    background_normal: ""
+                    color: 0.3, 0.3, 0.3, 1
+                    on_press: root._next_month()
+                    canvas.before:
+                        Color:
+                            rgba: 0.95, 0.95, 0.95, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(8)]
+
+                Button:
+                    text: "Назад"
+                    font_size: "12sp"
+                    background_color: 0.2, 0.6, 1, 1
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    on_press: root._go_to_main()
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.6, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(8)]
+
+        # ---------- Заголовок месяца ----------
+        BoxLayout:
+            size_hint_y: None
+            height: dp(30)
+            padding: [0, dp(5)]
+
+            Label:
+                text: "{} {}".format(root.current_month, root.current_year)
+                font_size: "18sp"
+                bold: True
+                color: 0.1, 0.15, 0.25, 1
+                halign: "center"
+                valign: "middle"
+                text_size: self.size
+
+        # ---------- Дни недели ----------
+        GridLayout:
+            cols: 7
+            size_hint_y: None
+            height: dp(25)
+            spacing: dp(2)
+
+            Label:
+                text: "ПН"
+                font_size: "12sp"
+                bold: True
+                color: 0.4, 0.4, 0.4, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ВТ"
+                font_size: "12sp"
+                bold: True
+                color: 0.4, 0.4, 0.4, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "СР"
+                font_size: "12sp"
+                bold: True
+                color: 0.4, 0.4, 0.4, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ЧТ"
+                font_size: "12sp"
+                bold: True
+                color: 0.4, 0.4, 0.4, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ПТ"
+                font_size: "12sp"
+                bold: True
+                color: 0.4, 0.4, 0.4, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "СБ"
+                font_size: "12sp"
+                bold: True
+                color: 0.8, 0.2, 0.2, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ВС"
+                font_size: "12sp"
+                bold: True
+                color: 0.8, 0.2, 0.2, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+
+        # ---------- Сетка календаря ----------
+        GridLayout:
+            id: calendar_grid
+            cols: 7
+            spacing: dp(2)
+            size_hint_y: 1.0
+
+        # ---------- Разделительная линия ----------
+        BoxLayout:
+            size_hint_y: None
+            height: dp(1)
+            canvas.before:
+                Color:
+                    rgba: 0.8, 0.8, 0.8, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        # ---------- Панель выбранного дня ----------
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(120)
+            padding: [dp(15), dp(10)]
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                Line:
+                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(10)]
+                    width: 1
+
+            # Заголовок выбранного дня
+            Label:
+                text: "{} {}".format(root.selected_day, root.current_month) if root.selected_day > 0 else "Выберите день"
+                font_size: "16sp"
+                bold: True
+                size_hint_y: 0.3
+                color: 0.1, 0.15, 0.25, 1
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+
+            # Прокручиваемый список задач
+            ScrollView:
+                size_hint_y: 0.7
+                do_scroll_x: False
+                bar_color: 0.2, 0.6, 1, 0.7
+                bar_width: dp(4)
+                bar_inactive_color: 0.2, 0.6, 1, 0.3
+
+                Label:
+                    text: root.selected_day_info_text
+                    font_size: "14sp"
+                    color: 0.4, 0.4, 0.4, 1
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    halign: "left"
+                    valign: "top"
+                    markup: True
+================================================================================
+        📁 components/
+            📄 task_item.kv
+
+================================================================================
+ФАЙЛ: ui/kv/components/task_item.kv
+================================================================================
+
+================================================================================
+        📄 main.kv
+
+================================================================================
+ФАЙЛ: ui/kv/main.kv
+================================================================================
+
+================================================================================
+        📄 main_screen.kv
+
+================================================================================
+ФАЙЛ: ui/kv/main_screen.kv
+================================================================================
+<MainScreen>:
+    name: "main"
+    tasks_container: tasks_container
+
+    canvas.before:
+        Color:
+            rgba: 0.98, 0.98, 0.98, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [dp(20), dp(20)]
+        spacing: dp(24)
+
+        # Верхняя панель
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(16)
+
+            Label:
+                text: "Сегодня"
+                font_size: "32sp"
+                bold: True
+                color: 0.1, 0.1, 0.1, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Widget:
+
+        # Кнопки действий
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(12)
+
+            Button:
+                text: "+ Новая задача"
+                font_size: "15sp"
+                bold: True
+                background_color: 0.2, 0.6, 1, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._go_to_task_editor()
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.6, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(24)]
+
+            Button:
+                text: "Календарь"
+                font_size: "15sp"
+                background_color: 0.95, 0.95, 0.95, 1
+                background_normal: ""
+                color: 0.3, 0.3, 0.3, 1
+                on_press: root._go_to_calendar()
+                canvas.before:
+                    Color:
+                        rgba: 0.95, 0.95, 0.95, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(24)]
+
+            Button:
+                text: "Статистика"
+                font_size: "15sp"
+                background_color: 0.95, 0.95, 0.95, 1
+                background_normal: ""
+                color: 0.3, 0.3, 0.3, 1
+                on_press: root._go_to_statistics()
+                canvas.before:
+                    Color:
+                        rgba: 0.95, 0.95, 0.95, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(24)]
+
+        # Список задач
+        ScrollView:
+            do_scroll_x: False
+            bar_color: 0.2, 0.6, 1, 0.6
+            bar_width: dp(4)
+            bar_inactive_color: 0.2, 0.6, 1, 0.3
+            scroll_type: ['bars', 'content']
+            effect_cls: "ScrollEffect"
+
+            BoxLayout:
+                id: tasks_container
+                orientation: "vertical"
+                size_hint_y: None
+                spacing: 0
+                padding: [dp(4), dp(8), dp(4), dp(20)]
+                height: self.minimum_height
+================================================================================
+        📄 statistics_screen.kv
+
+================================================================================
+ФАЙЛ: ui/kv/statistics_screen.kv
+================================================================================
+<StatisticsScreen>:
+    name: "statistics"
+
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.97, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [30, 25]
+        spacing: 20
+
+        # ---------- Верхняя панель ----------
+        BoxLayout:
+            size_hint_y: 0.12
+            spacing: 15
+
+            Label:
+                text: "Статистика продуктивности"
+                font_size: "30sp"
+                bold: True
+                color: 0.1, 0.15, 0.25, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Button:
+                text: "Назад"
+                size_hint_x: 0.3
+                background_color: 0.15, 0.3, 0.6, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                font_size: "16sp"
+                bold: True
+                on_press: root._go_to_main()
+                canvas.before:
+                    Color:
+                        rgba: 0.15, 0.3, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [14]
+
+        # ---------- Основная статистика ----------
+        GridLayout:
+            cols: 2
+            spacing: 15
+            size_hint_y: 0.25
+
+            # Карточка выполненных задач
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Выполнено задач"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: str(root.completed_tasks)
+                    font_size: "28sp"
+                    bold: True
+                    color: 0.15, 0.3, 0.6, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+            # Карточка продуктивности
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Продуктивность"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: "{}%".format(root.productivity_percent)
+                    font_size: "28sp"
+                    bold: True
+                    color: 0.15, 0.3, 0.6, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+        # ---------- Дополнительная статистика ----------
+        GridLayout:
+            cols: 2
+            spacing: 15
+            size_hint_y: 0.25
+
+            # Среднее время выполнения
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Среднее время"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: "25 мин"
+                    font_size: "22sp"
+                    bold: True
+                    color: 0.1, 0.3, 0.2, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+            # Лучший день
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 15]
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16]
+                    Color:
+                        rgba: 0.8, 0.85, 0.9, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                        width: 1
+
+                Label:
+                    text: "Лучший день"
+                    font_size: "16sp"
+                    color: 0.35, 0.35, 0.35, 1
+                    size_hint_y: 0.4
+                    halign: "left"
+                    text_size: self.size
+
+                Label:
+                    text: "Понедельник"
+                    font_size: "22sp"
+                    bold: True
+                    color: 0.4, 0.25, 0.05, 1
+                    size_hint_y: 0.6
+                    halign: "left"
+                    text_size: self.size
+
+        # ---------- Разделительная линия ----------
+        BoxLayout:
+            size_hint_y: None
+            height: 2
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 0.08
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        # ---------- Заголовок графика ----------
+        Label:
+            text: "График продуктивности"
+            font_size: "20sp"
+            color: 0.15, 0.15, 0.25, 1
+            size_hint_y: 0.08
+            bold: True
+
+        # ---------- Область графика ----------
+        BoxLayout:
+            size_hint_y: 0.3
+            padding: [10, 15]
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [16]
+                Color:
+                    rgba: 0.8, 0.85, 0.9, 1
+                Line:
+                    rounded_rectangle: [self.x, self.y, self.width, self.height, 16]
+                    width: 1
+
+            Label:
+                text: "График будет отображаться здесь"
+                font_size: "16sp"
+                color: 0.5, 0.5, 0.5, 1
+                halign: "center"
+                valign: "middle"
+                text_size: self.size
+================================================================================
+        📄 task_card.kv
+
+================================================================================
+ФАЙЛ: ui/kv/task_card.kv
+================================================================================
+<TaskCard>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(80) if root.description else dp(60)
+    padding: [dp(16), dp(12)]
+    spacing: dp(12)
+
+    canvas.before:
+        # Фон карточки - чистый белый
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
+
+        # Тонкая граница
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(8)]
+            width: 1
+
+    # Чекбокс выполнения
+    BoxLayout:
+        size_hint_x: None
+        width: dp(24)
+        padding: [0, dp(4), 0, 0]
+
+        Button:
+            size_hint: None, None
+            size: dp(20), dp(20)
+            background_color: 0, 0, 0, 0
+            background_normal: ''
+            on_press: root.toggle_completion()
+            canvas.before:
+                # Круг для чекбокса
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1 if not root.is_completed else root.priority_color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+
+                # Галочка
+                Color:
+                    rgba: 1, 1, 1, 1 if root.is_completed else 0
+                Line:
+                    points: [self.x + dp(5), self.y + dp(10), self.x + dp(9), self.y + dp(14), self.x + dp(15), self.y + dp(6)]
+                    width: dp(2)
+                    cap: 'round'
+                    joint: 'round'
+
+    # Основное содержимое
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(4)
+
+        # Первая строка: заголовок и приоритет
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.6
+            spacing: dp(8)
+
+            # Заголовок задачи
+            Label:
+                text: root.title
+                font_size: '16sp'
+                bold: True
+                color: (0.2, 0.2, 0.2, 1) if not root.is_completed else (0.6, 0.6, 0.6, 1)
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.width, None
+                shorten: True
+                shorten_from: 'right'
+
+            # Индикатор приоритета
+            Widget:
+                size_hint_x: None
+                width: dp(4)
+                canvas.before:
+                    Color:
+                        rgba: root.priority_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(2)]
+
+        # Вторая строка: описание и дата (только если есть описание)
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.4
+            spacing: dp(8)
+
+            # Описание
+            Label:
+                text: root.description
+                font_size: '14sp'
+                color: 0.5, 0.5, 0.5, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.width, None
+                shorten: True
+                shorten_from: 'right'
+                opacity: 1 if root.description else 0
+
+            # Дата и время
+            BoxLayout:
+                size_hint_x: None
+                width: dp(70) if root.time_text != "Неизвестно" else dp(50)
+                orientation: 'horizontal'
+                spacing: dp(4)
+
+                Label:
+                    text: root.date_text
+                    font_size: '12sp'
+                    color: 0.6, 0.6, 0.6, 1
+                    halign: 'right'
+                    valign: 'middle'
+                    text_size: self.width, None
+================================================================================
+        📄 task_editor.kv
+
+================================================================================
+ФАЙЛ: ui/kv/task_editor.kv
+================================================================================
+<TaskEditorScreen>:
+    name: "task_editor"
+    
+    BoxLayout:
+        orientation: "vertical"
+        padding: [dp(15), dp(15)]
+        spacing: 0
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.97, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Чистый заголовок с иконкой назад
+        BoxLayout:
+            size_hint_y: 0.1
+            padding: [0, dp(10)]
+
+            Button:
+                text: "< Назад"
+                font_size: "16sp"
+                size_hint_x: 0.3
+                background_color: 0, 0, 0, 0
+                background_normal: ""
+                color: 0.15, 0.3, 0.6, 1
+                bold: True
+                on_press: root._go_to_main()
+
+            Label:
+                text: "Новая задача"
+                font_size: "18sp"
+                bold: True
+                color: 0.1, 0.15, 0.25, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+
+            Widget:
+                size_hint_x: 0.3
+
+        # Основной контент
+        ScrollView:
+            do_scroll_x: False
+            bar_color: 0.5, 0.5, 0.8, 0.3
+            bar_width: 4
+            bar_inactive_color: 0.5, 0.5, 0.8, 0.1
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(25)
+                padding: [dp(10), dp(20)]
+
+                # Название задачи
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(80)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "НАЗВАНИЕ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.4
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    TextInput:
+                        id: task_title
+                        hint_text: "Введите название задачи..."
+                        size_hint_y: 0.6
+                        multiline: False
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.1, 0.1, 0.1, 1
+                        padding: [dp(15), dp(10)]
+                        font_size: '16sp'
+                        cursor_color: 0.15, 0.3, 0.6, 1
+                        write_tab: False
+                        focus: True
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [10]
+                            Color:
+                                rgba: 0.8, 0.85, 0.9, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
+                                width: 1
+
+                # Описание задачи
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(140)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ОПИСАНИЕ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.2
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    TextInput:
+                        id: task_description
+                        hint_text: "Добавьте описание задачи..."
+                        size_hint_y: 0.8
+                        multiline: True
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.1, 0.1, 0.1, 1
+                        padding: [dp(15), dp(10)]
+                        font_size: '15sp'
+                        cursor_color: 0.15, 0.3, 0.6, 1
+                        write_tab: False
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [10]
+                            Color:
+                                rgba: 0.8, 0.85, 0.9, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
+                                width: 1
+
+                # Приоритет
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(80)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ПРИОРИТЕТ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    BoxLayout:
+                        id: priority_box
+                        size_hint_y: 0.7
+                        spacing: dp(8)
+
+                        ToggleButton:
+                            id: high_priority
+                            text: "ВЫСОКИЙ"
+                            group: "priority"
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
+                            font_size: '12sp'
+                            bold: True
+                            on_state: root.on_priority_change(self)
+                            canvas.before:
+                                Color:
+                                    rgba: 0.8, 0.2, 0.2, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                        ToggleButton:
+                            id: medium_priority
+                            text: "СРЕДНИЙ"
+                            group: "priority"
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
+                            font_size: '12sp'
+                            bold: True
+                            on_state: root.on_priority_change(self)
+                            state: 'down'
+                            canvas.before:
+                                Color:
+                                    rgba: 0.9, 0.6, 0.1, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                        ToggleButton:
+                            id: low_priority
+                            text: "НИЗКИЙ"
+                            group: "priority"
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            color: (1, 1, 1, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 1)
+                            font_size: '12sp'
+                            bold: True
+                            on_state: root.on_priority_change(self)
+                            canvas.before:
+                                Color:
+                                    rgba: 0.2, 0.6, 0.2, 1 if self.state == 'down' else 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                # Дата и напоминания
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(80)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ДАТА И ВРЕМЯ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    BoxLayout:
+                        size_hint_y: 0.7
+                        spacing: dp(8)
+
+                        Button:
+                            id: date_button
+                            text: "ЗАВТРА, 12:00"
+                            font_size: "12sp"
+                            background_color: 0.95, 0.96, 0.98, 1
+                            background_normal: ""
+                            color: 0.3, 0.3, 0.4, 1
+                            bold: True
+                            on_press: root._select_date()
+                            canvas.before:
+                                Color:
+                                    rgba: 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                        Button:
+                            id: time_button
+                            text: "ВЫБРАТЬ ВРЕМЯ"
+                            font_size: "12sp"
+                            background_color: 0.95, 0.96, 0.98, 1
+                            background_normal: ""
+                            color: 0.3, 0.3, 0.4, 1
+                            bold: True
+                            on_press: root._select_time()
+                            canvas.before:
+                                Color:
+                                    rgba: 0.95, 0.96, 0.98, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [8]
+
+                # Напоминание
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(60)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "НАПОМИНАНИЕ"
+                        font_size: "12sp"
+                        color: 0.4, 0.4, 0.5, 1
+                        size_hint_y: 0.5
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+
+                    Button:
+                        text: "УСТАНОВИТЬ НАПОМИНАНИЕ ЗА 30 МИН"
+                        font_size: "12sp"
+                        background_color: 0.95, 0.96, 0.98, 1
+                        background_normal: ""
+                        color: 0.3, 0.3, 0.4, 1
+                        bold: True
+                        on_press: root._set_reminder()
+                        canvas.before:
+                            Color:
+                                rgba: 0.95, 0.96, 0.98, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [8]
+
+        # Фиксированная нижняя панель
+        BoxLayout:
+            size_hint_y: 0.12
+            spacing: dp(15)
+            padding: [dp(10), dp(5)]
+
+            Button:
+                text: "ОТМЕНА"
+                font_size: "14sp"
+                background_color: 0.95, 0.96, 0.98, 1
+                background_normal: ""
+                color: 0.4, 0.4, 0.5, 1
+                bold: True
+                on_press: root._go_to_main()
+                canvas.before:
+                    Color:
+                        rgba: 0.95, 0.96, 0.98, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10]
+
+            Button:
+                text: "СОХРАНИТЬ"
+                font_size: "14sp"
+                bold: True
+                background_color: 0.15, 0.3, 0.6, 1
+                background_normal: ""
+                color: 1, 1, 1, 1
+                on_press: root._save_task()
+                canvas.before:
+                    Color:
+                        rgba: 0.15, 0.3, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10]
+================================================================================
+    📁 screens/
+        📄 .DS_Store
+
+================================================================================
+ФАЙЛ: ui/screens/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+        📄 __init__.py
+
+================================================================================
+ФАЙЛ: ui/screens/__init__.py
+================================================================================
+
+================================================================================
+        📄 calendar_view.py
+
+================================================================================
+ФАЙЛ: ui/screens/calendar_view.py
+================================================================================
+from kivy.uix.screenmanager import Screen
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty, NumericProperty
+from kivy.clock import Clock
+from kivy.metrics import dp
+from datetime import datetime, timedelta
+import os
+
+# Загружаем KV-файл
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'calendar_view.kv')
+if os.path.exists(kv_path):
+    Builder.load_file(kv_path)
+
+
+class CalendarDayButton:
+    """Простой класс для создания дней календаря с гарантированным отображением цифр"""
+
+    @staticmethod
+    def create(day, is_today=False, is_selected=False, is_weekend=False, task_count=0, on_press_callback=None):
+        from kivy.uix.button import Button
+
+        # Базовые цвета
+        if is_selected:
+            bg_color = (0.2, 0.6, 1, 1)  # Синий
+            text_color = (1, 1, 1, 1)  # Белый
+        elif is_today:
+            bg_color = (0.9, 0.95, 1, 1)  # Светло-синий
+            text_color = (0.2, 0.6, 1, 1)  # Синий
+        elif is_weekend:
+            bg_color = (1, 1, 1, 1)  # Белый
+            text_color = (0.8, 0.2, 0.2, 1)  # Красный
+        else:
+            bg_color = (1, 1, 1, 1)  # Белый
+            text_color = (0.1, 0.1, 0.1, 1)  # Черный
+
+        # Создаем текст кнопки - просто число
+        button_text = str(day)
+
+        # Если есть задачи, добавляем точку после числа
+        if task_count > 0:
+            button_text += "\n•"
+
+        # Создаем кнопку
+        day_button = Button(
+            text=button_text,
+            size_hint_y=None,
+            height=dp(60),
+            background_color=bg_color,
+            background_normal='',
+            color=text_color,
+            font_size='18sp',
+            bold=True,
+            halign='center',
+            valign='middle'
+        )
+
+        # Обработчик нажатия
+        if on_press_callback:
+            day_button.bind(on_press=lambda instance: on_press_callback(day))
+
+        return day_button
+
+
+class CalendarScreen(Screen):
+    """Упрощенный экран календаря с гарантированным отображением цифр"""
+
+    current_month = StringProperty("")
+    current_year = StringProperty("")
+    calendar_grid = ObjectProperty(None)
+    selected_day = NumericProperty(0)
+    selected_date = ObjectProperty(None)
+    selected_day_info_text = StringProperty("Выберите день для просмотра задач")
+
+    def __init__(self, task_service=None, **kwargs):
+        super().__init__(**kwargs)
+        self.task_service = task_service
+        self.current_date = datetime.now()
+        self.selected_day = self.current_date.day
+        self.selected_date = self.current_date
+        self.tasks_for_selected_day = []
+        Clock.schedule_once(self._update_calendar, 0.1)
+
+    def on_enter(self, *args):
+        """Вызывается при входе на экран"""
+        self._update_calendar()
+
+    def _go_to_main(self):
+        self.manager.current = 'main'
+
+    def _update_calendar(self, dt=None):
+        """Обновляет отображение календаря."""
+        if not self.calendar_grid:
+            return
+
+        self.calendar_grid.clear_widgets()
+
+        # Устанавливаем заголовок месяца и года
+        self.current_month = self._get_month_name(self.current_date.month)
+        self.current_year = str(self.current_date.year)
+
+        # Получаем первый день месяца и количество дней
+        first_day = self.current_date.replace(day=1)
+        days_in_month = self._get_days_in_month(self.current_date.year, self.current_date.month)
+
+        # Добавляем пустые ячейки до первого дня месяца
+        first_weekday = first_day.weekday()  # 0-6, где 0 - понедельник
+        for _ in range(first_weekday):
+            from kivy.uix.widget import Widget
+            self.calendar_grid.add_widget(Widget(size_hint_y=None, height=dp(60)))
+
+        # Добавляем дни месяца
+        today = datetime.now()
+        for day in range(1, days_in_month + 1):
+            is_today = (day == today.day and
+                        self.current_date.month == today.month and
+                        self.current_date.year == today.year)
+            is_selected = (day == self.selected_day)
+            is_weekend = (first_weekday + day - 1) % 7 >= 5  # Суббота и воскресенье
+
+            # Получаем задачи для этого дня
+            day_date = self.current_date.replace(day=day)
+            day_tasks = []
+            if self.task_service:
+                try:
+                    day_tasks = self.task_service.get_tasks_by_date(day_date)
+                except Exception as e:
+                    print(f"CalendarScreen: Ошибка загрузки задач: {e}")
+
+            day_widget = CalendarDayButton.create(
+                day=day,
+                is_today=is_today,
+                is_selected=is_selected,
+                is_weekend=is_weekend,
+                task_count=len(day_tasks),
+                on_press_callback=self._on_day_selected
+            )
+            self.calendar_grid.add_widget(day_widget)
+
+        # Обновляем информацию о выбранном дне
+        self._update_selected_day_info()
+
+    def _update_selected_day_info(self):
+        """Обновляет информацию о задачах выбранного дня"""
+        if not self.selected_day:
+            self.selected_day_info_text = "Выберите день для просмотра задач"
+            return
+
+        # Получаем задачи для выбранного дня
+        selected_date = self.current_date.replace(day=self.selected_day)
+        self.tasks_for_selected_day = []
+
+        if self.task_service:
+            try:
+                self.tasks_for_selected_day = self.task_service.get_tasks_by_date(selected_date)
+            except Exception as e:
+                print(f"CalendarScreen: Ошибка загрузки задач: {e}")
+
+        # Обновляем текст информации
+        if self.tasks_for_selected_day:
+            task_text = f"Задачи на {self.selected_day} {self.current_month}:\n\n"
+            for task in self.tasks_for_selected_day:
+                status_icon = "✓" if task.status.value == "Выполнена" else "○"
+                priority_color = self._get_priority_color(task.priority.value)
+                task_text += f"{status_icon} [color={priority_color}]●[/color] {task.title}\n"
+            self.selected_day_info_text = task_text
+        else:
+            self.selected_day_info_text = f"На {self.selected_day} {self.current_month} задачи не запланированы"
+
+    def _get_priority_color(self, priority):
+        """Возвращает цвет приоритета в hex"""
+        colors = {
+            "Высокий": "ff4444",  # Красный
+            "Средний": "ffaa00",  # Оранжевый
+            "Низкий": "44ff44"  # Зеленый
+        }
+        return colors.get(priority, "888888")
+
+    def _on_day_selected(self, day):
+        """Обрабатывает выбор дня."""
+        self.selected_day = day
+        self.selected_date = self.current_date.replace(day=day)
+        self._update_calendar()
+
+    def _get_month_name(self, month_num):
+        """Возвращает название месяца по номеру"""
+        months = [
+            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+        ]
+        return months[month_num - 1] if 1 <= month_num <= 12 else ""
+
+    def _get_days_in_month(self, year, month):
+        """Возвращает количество дней в месяце"""
+        if month == 12:
+            next_month = datetime(year + 1, 1, 1)
+        else:
+            next_month = datetime(year, month + 1, 1)
+
+        last_day = next_month - timedelta(days=1)
+        return last_day.day
+
+    def _prev_month(self):
+        """Переход к предыдущему месяцу."""
+        if self.current_date.month == 1:
+            self.current_date = self.current_date.replace(year=self.current_date.year - 1, month=12)
+        else:
+            self.current_date = self.current_date.replace(month=self.current_date.month - 1)
+        self.selected_day = 0
+        self._update_calendar()
+
+    def _next_month(self):
+        """Переход к следующему месяцу."""
+        if self.current_date.month == 12:
+            self.current_date = self.current_date.replace(year=self.current_date.year + 1, month=1)
+        else:
+            self.current_date = self.current_date.replace(month=self.current_date.month + 1)
+        self.selected_day = 0
+        self._update_calendar()
+
+    def _go_to_today(self):
+        """Переход к текущему дню."""
+        self.current_date = datetime.now()
+        self.selected_day = self.current_date.day
+        self._update_calendar()
+================================================================================
+        📄 main_screen.py
+
+================================================================================
+ФАЙЛ: ui/screens/main_screen.py
+================================================================================
+from kivy.uix.screenmanager import Screen
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty
+from kivy.clock import Clock
+from kivy.metrics import dp
+import os
+
+# Загружаем KV-файлы
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'main_screen.kv')
+Builder.load_file(kv_path)
+
+# Импортируем нашу современную карточку задачи
+from ui.widgets.task_card import TaskCard
+
+
+class MainScreen(Screen):
+    """Главный экран в современном стиле"""
+
+    tasks_container = ObjectProperty(None)
+
+    def __init__(self, task_service=None, **kwargs):
+        super().__init__(**kwargs)
+        self.task_service = task_service
+        Clock.schedule_once(self._load_tasks, 0.1)
+
+    def _load_tasks(self, dt=None):
+        """Загружает задачи при входе на экран"""
+        if self.task_service and self.tasks_container:
+            self._update_tasks_display()
+
+    def _update_tasks_display(self):
+        """Обновляет отображение задач"""
+        if not self.tasks_container:
+            return
+
+        self.tasks_container.clear_widgets()
+
+        try:
+            today_tasks = self.task_service.get_today_tasks()
+
+            if not today_tasks:
+                self._show_empty_state()
+                return
+
+            # Добавляем отступ сверху
+            from kivy.uix.widget import Widget
+            self.tasks_container.add_widget(Widget(size_hint_y=None, height=dp(8)))
+
+            for task in today_tasks:
+                task_widget = TaskCard(task, self._complete_task)
+                self.tasks_container.add_widget(task_widget)
+
+                # Добавляем маленький разделитель между задачами
+                separator = Widget(size_hint_y=None, height=dp(8))
+                self.tasks_container.add_widget(separator)
+
+            print(f"MainScreen: Отображено {len(today_tasks)} задач")
+
+        except Exception as e:
+            print(f"MainScreen: Ошибка загрузки задач: {e}")
+            import traceback
+            traceback.print_exc()
+
+    def _show_empty_state(self):
+        """Показывает красивое состояние при отсутствии задач"""
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.label import Label
+
+        empty_container = BoxLayout(
+            orientation='vertical',
+            size_hint_y=None,
+            height=dp(180),
+            padding=dp(40),
+            spacing=dp(16)
+        )
+
+        empty_label = Label(
+            text="[color=cccccc]✓[/color]\n[b]Все задачи выполнены![/b]\n\nСоздайте новую задачу\nили проверьте календарь",
+            font_size='16sp',
+            color=(0.6, 0.6, 0.6, 1),
+            halign='center',
+            valign='middle',
+            text_size=(None, None),
+            markup=True
+        )
+
+        empty_container.add_widget(empty_label)
+        self.tasks_container.add_widget(empty_container)
+        print("MainScreen: Нет задач на сегодня")
+
+    def _complete_task(self, task_id):
+        """Отмечает задачу как выполненную"""
+        try:
+            self.task_service.complete_task(task_id)
+            # Не обновляем сразу - пусть пользователь видит анимацию
+            Clock.schedule_once(lambda dt: self._update_tasks_display(), 0.3)
+            print(f"Задача {task_id} отмечена как выполненная")
+        except Exception as e:
+            print(f"Ошибка выполнения задачи: {e}")
+
+    def on_enter(self, *args):
+        """Обновляет задачи при входе на экран"""
+        Clock.schedule_once(self._load_tasks, 0.1)
+
+    def _go_to_task_editor(self, instance=None):
+        self.manager.current = 'task_editor'
+
+    def _go_to_calendar(self, instance=None):
+        self.manager.current = 'calendar'
+
+    def _go_to_statistics(self, instance=None):
+        self.manager.current = 'statistics'
+================================================================================
+        📄 statistics_screen.py
+
+================================================================================
+ФАЙЛ: ui/screens/statistics_screen.py
+================================================================================
+from kivy.uix.screenmanager import Screen
+from kivy.lang import Builder
+from kivy.properties import NumericProperty, ListProperty
+from datetime import datetime, timedelta
+import os
+
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'statistics_screen.kv')
+Builder.load_file(kv_path)
+
+
+class StatisticsScreen(Screen):
+    """Экран статистики продуктивности."""
+
+    completed_tasks = NumericProperty(0)
+    productivity_percent = NumericProperty(0)
+    chart_data = ListProperty([])
+
+    def __init__(self, task_service=None, **kwargs):
+        super().__init__(**kwargs)
+        self.task_service = task_service
+
+    def on_enter(self, *args):
+        """Обновляет статистику при входе на экран"""
+        self._update_statistics()
+
+    def _update_statistics(self):
+        """Обновляет статистические данные"""
+        if not self.task_service:
+            return
+
+        try:
+            # Получаем все задачи
+            all_tasks = self.task_service.get_all_tasks()
+
+            # Считаем выполненные задачи
+            completed_tasks = [task for task in all_tasks if task.status.value == "Выполнена"]
+            self.completed_tasks = len(completed_tasks)
+
+            # Считаем продуктивность (процент выполненных от всех задач)
+            total_tasks = len(all_tasks)
+            if total_tasks > 0:
+                self.productivity_percent = int((self.completed_tasks / total_tasks) * 100)
+            else:
+                self.productivity_percent = 0
+
+        except Exception as e:
+            print(f"Ошибка загрузки статистики: {e}")
+
+    def _go_to_main(self):
+        self.manager.current = 'main'
+================================================================================
+        📄 task_editor.py
+
+================================================================================
+ФАЙЛ: ui/screens/task_editor.py
+================================================================================
+from kivy.uix.screenmanager import Screen
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.clock import Clock
+from datetime import datetime, timedelta
+from core.models import Priority
+import os
+
+# Загружаем KV-файл
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'task_editor.kv')
+Builder.load_file(kv_path)
+
+
+class TaskEditorScreen(Screen):
+    """Экран создания и редактирования задач."""
+
+    def __init__(self, task_service=None, **kwargs):
+        super().__init__(**kwargs)
+        self.task_service = task_service
+        # Устанавливаем дату на завтра по умолчанию
+        self.selected_date = datetime.now() + timedelta(days=1)
+        self.selected_time = (12, 0)  # (часы, минуты)
+        self.reminder_time = None
+        Clock.schedule_once(self._setup_initial_state, 0.1)
+
+    def _setup_initial_state(self, dt):
+        """Устанавливает начальное состояние формы"""
+        if hasattr(self, 'ids') and 'medium_priority' in self.ids:
+            self.ids.medium_priority.state = 'down'
+        self._update_datetime_display()
+
+    def on_enter(self, *args):
+        """Очищает форму при каждом входе на экран"""
+        self.clear_form()
+
+    def _go_to_main(self):
+        """Возврат на главный экран."""
+        self.manager.current = 'main'
+
+    def on_priority_change(self, button):
+        """Обработчик изменения приоритета."""
+        if button.state == 'down':
+            print(f"Выбран приоритет: {button.text}")
+
+    def _save_task(self):
+        """Сохранение задачи."""
+        try:
+            # Получаем данные из полей ввода
+            title = self.ids.task_title.text.strip()
+            description = self.ids.task_description.text.strip()
+
+            # Валидация
+            if not title:
+                self._show_error("Название задачи не может быть пустым")
+                return
+
+            # Определяем выбранный приоритет по состоянию кнопок
+            if self.ids.high_priority.state == 'down':
+                selected_priority_text = "ВЫСОКИЙ"
+                priority = Priority.HIGH
+            elif self.ids.medium_priority.state == 'down':
+                selected_priority_text = "СРЕДНИЙ"
+                priority = Priority.MEDIUM
+            elif self.ids.low_priority.state == 'down':
+                selected_priority_text = "НИЗКИЙ"
+                priority = Priority.LOW
+            else:
+                selected_priority_text = "СРЕДНИЙ"
+                priority = Priority.MEDIUM
+
+            # Создаем объект datetime из выбранной даты и времени
+            due_date = self.selected_date.replace(
+                hour=self.selected_time[0],
+                minute=self.selected_time[1],
+                second=0,
+                microsecond=0
+            )
+
+            print(f"Сохранение задачи: {title}")
+            print(f"Описание: {description}")
+            print(f"Приоритет: {selected_priority_text}")
+            print(f"Дата и время: {due_date}")
+
+            # Создаем задачу
+            task = self.task_service.create_task(
+                title=title,
+                description=description,
+                priority=priority,
+                due_date=due_date,
+                reminder_time=self.reminder_time
+            )
+
+            print(f"Задача успешно создана: {task.title}")
+            self._go_to_main()
+
+        except Exception as e:
+            print(f"Ошибка сохранения задачи: {e}")
+            import traceback
+            traceback.print_exc()
+            self._show_error(f"Ошибка: {str(e)}")
+
+    def _show_error(self, message):
+        """Показывает сообщение об ошибке"""
+        from kivy.uix.popup import Popup
+        from kivy.uix.label import Label
+        from kivy.uix.button import Button
+        from kivy.uix.boxlayout import BoxLayout
+
+        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        content.add_widget(Label(text=message))
+
+        btn = Button(text='OK', size_hint_y=0.4)
+        popup = Popup(title='Ошибка', content=content, size_hint=(0.7, 0.3))
+        btn.bind(on_press=popup.dismiss)
+        content.add_widget(btn)
+
+        popup.open()
+
+    def _select_date(self):
+        """Открывает окно выбора даты"""
+        from kivy.uix.popup import Popup
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.gridlayout import GridLayout
+        from kivy.uix.label import Label
+        from kivy.uix.button import Button
+        from kivy.metrics import dp
+        from datetime import datetime, timedelta
+
+        # Создаем контент попапа
+        content = BoxLayout(orientation='vertical', spacing=dp(10), padding=dp(15))
+
+        # Заголовок
+        title_label = Label(
+            text="Выберите дату",
+            font_size='18sp',
+            bold=True,
+            size_hint_y=0.2
+        )
+        content.add_widget(title_label)
+
+        # Сетка для дней
+        days_grid = GridLayout(cols=7, spacing=dp(2), size_hint_y=0.7)
+
+        # Дни недели
+        days_of_week = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+        for day in days_of_week:
+            day_label = Label(
+                text=day,
+                font_size='14sp',
+                bold=True,
+                color=(0.4, 0.4, 0.4, 1)
+            )
+            days_grid.add_widget(day_label)
+
+        # Получаем первый день месяца и количество дней
+        today = datetime.now()
+        first_day = today.replace(day=1)
+        days_in_month = (first_day.replace(month=first_day.month % 12 + 1, day=1) - timedelta(days=1)).day
+
+        # Добавляем дни
+        for day in range(1, days_in_month + 1):
+            day_btn = Button(
+                text=str(day),
+                font_size='14sp',
+                background_color=(0.95, 0.95, 0.95, 1),
+                background_normal=''
+            )
+
+            # Проверяем, является ли этот день выбранным
+            if day == self.selected_date.day and today.month == self.selected_date.month:
+                day_btn.background_color = (0.2, 0.6, 1, 1)
+                day_btn.color = (1, 1, 1, 1)
+
+            # Привязываем обработчик
+            day_btn.bind(on_press=lambda instance, d=day: self._on_date_selected(d, today.month, today.year))
+            days_grid.add_widget(day_btn)
+
+        content.add_widget(days_grid)
+
+        # Кнопки управления
+        buttons_layout = BoxLayout(spacing=dp(10), size_hint_y=0.1)
+
+        cancel_btn = Button(
+            text='Отмена',
+            background_color=(0.8, 0.8, 0.8, 1)
+        )
+
+        ok_btn = Button(
+            text='OK',
+            background_color=(0.2, 0.6, 1, 1)
+        )
+
+        cancel_btn.bind(on_press=lambda x: date_popup.dismiss())
+        ok_btn.bind(on_press=lambda x: date_popup.dismiss())
+
+        buttons_layout.add_widget(cancel_btn)
+        buttons_layout.add_widget(ok_btn)
+        content.add_widget(buttons_layout)
+
+        # Создаем и открываем попап
+        date_popup = Popup(
+            title='',
+            content=content,
+            size_hint=(0.8, 0.7),
+            auto_dismiss=False
+        )
+
+        date_popup.open()
+
+    def _on_date_selected(self, day, month, year):
+        """Обрабатывает выбор даты"""
+        self.selected_date = datetime(year, month, day)
+        self._update_datetime_display()
+        print(f"Выбрана дата: {self.selected_date.strftime('%d.%m.%Y')}")
+
+    def _select_time(self):
+        """Открывает окно выбора времени"""
+        from kivy.uix.popup import Popup
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.gridlayout import GridLayout
+        from kivy.uix.label import Label
+        from kivy.uix.button import Button
+        from kivy.metrics import dp
+
+        content = BoxLayout(orientation='vertical', spacing=dp(10), padding=dp(15))
+
+        # Заголовок
+        title_label = Label(
+            text="Выберите время",
+            font_size='18sp',
+            bold=True,
+            size_hint_y=0.2
+        )
+        content.add_widget(title_label)
+
+        # Сетка для часов
+        hours_grid = GridLayout(cols=6, spacing=dp(5), size_hint_y=0.4)
+        hours_label = Label(text="Часы:", size_hint_y=0.1)
+        content.add_widget(hours_label)
+        content.add_widget(hours_grid)
+
+        for hour in range(0, 24):
+            hour_btn = Button(
+                text=str(hour).zfill(2),
+                font_size='14sp',
+                background_color=(0.95, 0.95, 0.95, 1),
+                background_normal=''
+            )
+
+            if hour == self.selected_time[0]:
+                hour_btn.background_color = (0.2, 0.6, 1, 1)
+                hour_btn.color = (1, 1, 1, 1)
+
+            hour_btn.bind(on_press=lambda instance, h=hour: self._on_hour_selected(h))
+            hours_grid.add_widget(hour_btn)
+
+        # Сетка для минут
+        minutes_grid = GridLayout(cols=6, spacing=dp(5), size_hint_y=0.4)
+        minutes_label = Label(text="Минуты:", size_hint_y=0.1)
+        content.add_widget(minutes_label)
+        content.add_widget(minutes_grid)
+
+        for minute in range(0, 60, 5):  # С шагом 5 минут
+            minute_btn = Button(
+                text=str(minute).zfill(2),
+                font_size='14sp',
+                background_color=(0.95, 0.95, 0.95, 1),
+                background_normal=''
+            )
+
+            if minute == self.selected_time[1]:
+                minute_btn.background_color = (0.2, 0.6, 1, 1)
+                minute_btn.color = (1, 1, 1, 1)
+
+            minute_btn.bind(on_press=lambda instance, m=minute: self._on_minute_selected(m))
+            minutes_grid.add_widget(minute_btn)
+
+        # Кнопки управления
+        buttons_layout = BoxLayout(spacing=dp(10), size_hint_y=0.1)
+
+        cancel_btn = Button(
+            text='Отмена',
+            background_color=(0.8, 0.8, 0.8, 1)
+        )
+
+        ok_btn = Button(
+            text='OK',
+            background_color=(0.2, 0.6, 1, 1)
+        )
+
+        cancel_btn.bind(on_press=lambda x: time_popup.dismiss())
+        ok_btn.bind(on_press=lambda x: time_popup.dismiss())
+
+        buttons_layout.add_widget(cancel_btn)
+        buttons_layout.add_widget(ok_btn)
+        content.add_widget(buttons_layout)
+
+        # Создаем и открываем попап
+        time_popup = Popup(
+            title='',
+            content=content,
+            size_hint=(0.8, 0.8),
+            auto_dismiss=False
+        )
+
+        time_popup.open()
+
+    def _on_hour_selected(self, hour):
+        """Обрабатывает выбор часа"""
+        self.selected_time = (hour, self.selected_time[1])
+        self._update_datetime_display()
+
+    def _on_minute_selected(self, minute):
+        """Обрабатывает выбор минут"""
+        self.selected_time = (self.selected_time[0], minute)
+        self._update_datetime_display()
+
+    def _update_datetime_display(self):
+        """Обновляет отображение даты и времени на кнопках"""
+        if hasattr(self, 'ids'):
+            # Форматируем дату
+            from utils.date_utils import format_date_display
+            date_text = format_date_display(self.selected_date)
+            time_text = f"{self.selected_time[0]:02d}:{self.selected_time[1]:02d}"
+
+            if 'date_button' in self.ids:
+                self.ids.date_button.text = f"{date_text}, {time_text}"
+
+    def _set_reminder(self):
+        """Установка напоминания."""
+        print("Установка напоминания...")
+        # Устанавливаем напоминание за 30 минут до дедлайна
+        due_datetime = self.selected_date.replace(
+            hour=self.selected_time[0],
+            minute=self.selected_time[1]
+        )
+        self.reminder_time = due_datetime - timedelta(minutes=30)
+        self._show_reminder_set()
+
+    def _show_reminder_set(self):
+        """Показывает установленное напоминание"""
+        from kivy.uix.popup import Popup
+        from kivy.uix.label import Label
+        from kivy.uix.button import Button
+        from kivy.uix.boxlayout import BoxLayout
+
+        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        reminder_str = self.reminder_time.strftime('%d.%m.%Y %H:%M') if self.reminder_time else "Не установлено"
+        content.add_widget(Label(text=f"Напоминание: {reminder_str}"))
+
+        btn = Button(text='OK', size_hint_y=0.4)
+        popup = Popup(title='Напоминание установлено', content=content, size_hint=(0.7, 0.3))
+        btn.bind(on_press=popup.dismiss)
+        content.add_widget(btn)
+
+        popup.open()
+
+    def clear_form(self):
+        """Очистка формы при открытии."""
+        if hasattr(self, 'ids'):
+            self.ids.task_title.text = ""
+            self.ids.task_description.text = ""
+            # Сбрасываем приоритет на средний
+            if 'medium_priority' in self.ids:
+                self.ids.medium_priority.state = 'down'
+
+            # Сбрасываем даты
+            self.selected_date = datetime.now() + timedelta(days=1)
+            self.selected_time = (12, 0)
+            self.reminder_time = None
+            self._update_datetime_display()
+================================================================================
+    📁 widgets/
+        📄 .DS_Store
+
+================================================================================
+ФАЙЛ: ui/widgets/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+        📄 __init__.py
+
+================================================================================
+ФАЙЛ: ui/widgets/__init__.py
+================================================================================
+
+================================================================================
+        📄 calendar_widget.py
+
+================================================================================
+ФАЙЛ: ui/widgets/calendar_widget.py
+================================================================================
+
+================================================================================
+        📄 priority_picker.py
+
+================================================================================
+ФАЙЛ: ui/widgets/priority_picker.py
+================================================================================
+
+================================================================================
+        📄 task_card.py
+
+================================================================================
+ФАЙЛ: ui/widgets/task_card.py
+================================================================================
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import StringProperty, ListProperty, BooleanProperty
+from kivy.metrics import dp
+from kivy.lang import Builder
+import os
+
+# Загружаем KV-файл для карточки задачи
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'task_card.kv')
+if os.path.exists(kv_path):
+    Builder.load_file(kv_path)
+
+
+class TaskCard(BoxLayout):
+    """Современная карточка задачи в стиле Todoist/Notion"""
+
+    title = StringProperty("")
+    description = StringProperty("")
+    date_text = StringProperty("")
+    time_text = StringProperty("")
+    priority = StringProperty("Средний")
+    priority_color = ListProperty([0.5, 0.5, 0.5, 1])
+    is_completed = BooleanProperty(False)
+
+    def __init__(self, task, on_complete_callback, **kwargs):
+        super().__init__(**kwargs)
+        self.task = task
+        self.on_complete_callback = on_complete_callback
+
+        # Устанавливаем свойства
+        self.title = task.title
+        self.description = task.description if task.description else ""
+        self.is_completed = task.status.value == "Выполнена"
+
+        from utils.date_utils import format_date_display, format_time_display
+        self.date_text = format_date_display(task.due_date)
+        self.time_text = format_time_display(task.due_date)
+        self.priority = task.priority.value
+
+        # Устанавливаем цвета в зависимости от приоритета
+        self._set_priority_colors()
+
+    def _set_priority_colors(self):
+        """Устанавливает цвета в зависимости от приоритета"""
+        priority_styles = {
+            "Высокий": [0.88, 0.24, 0.19, 1],  # Красный как в Todoist
+            "Средний": [1.0, 0.62, 0.11, 1],  # Оранжевый
+            "Низкий": [0.16, 0.63, 0.33, 1]  # Зеленый
+        }
+
+        self.priority_color = priority_styles.get(self.priority, [0.44, 0.44, 0.44, 1])
+
+    def toggle_completion(self):
+        """Переключает состояние выполнения задачи"""
+        if not self.is_completed and self.on_complete_callback:
+            self.on_complete_callback(self.task.id)
+================================================================================
+        📄 task_item.py
+
+================================================================================
+ФАЙЛ: ui/widgets/task_item.py
+================================================================================
+
+================================================================================
+📁 utils/
+    📄 .DS_Store
+
+================================================================================
+ФАЙЛ: utils/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+    📄 __init__.py
+
+================================================================================
+ФАЙЛ: utils/__init__.py
+================================================================================
+
+================================================================================
+    📄 config.py
+
+================================================================================
+ФАЙЛ: utils/config.py
+================================================================================
+import os
+
+# Пути к файлам данных
+DATA_DIR = os.path.join(os.path.expanduser("~"), ".smart_planner")
+TASKS_FILE = os.path.join(DATA_DIR, "tasks.json")
+STATISTICS_FILE = os.path.join(DATA_DIR, "statistics.json")
+
+# Настройки уведомлений
+REMINDER_BEFORE_MINUTES = 30
+
+# Цвета приоритетов
+PRIORITY_COLORS = {
+    "Высокий": (0.8, 0.2, 0.2, 1),
+    "Средний": (0.9, 0.6, 0.1, 1), 
+    "Низкий": (0.2, 0.6, 0.2, 1)
+}
+
+def ensure_data_dir():
+    """Создает директорию для данных если она не существует"""
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+================================================================================
+    📄 date_utils.py
+
+================================================================================
+ФАЙЛ: utils/date_utils.py
+================================================================================
+from datetime import datetime, timedelta
+
+
+def format_date_display(date: datetime) -> str:
+    """Форматирует дату для отображения в современном стиле"""
+    if not isinstance(date, datetime):
+        return ""
+
+    today = datetime.now().date()
+    target_date = date.date()
+
+    if target_date == today:
+        return "Сегодня"
+    elif target_date == today + timedelta(days=1):
+        return "Завтра"
+    elif target_date == today - timedelta(days=1):
+        return "Вчера"
+    else:
+        # Короткий формат: "30 окт"
+        month_names = ["янв", "фев", "мар", "апр", "май", "июн",
+                       "июл", "авг", "сен", "окт", "ноя", "дек"]
+        return f"{date.day} {month_names[date.month - 1]}"
+
+
+def format_time_display(date: datetime) -> str:
+    """Форматирует время для отображения"""
+    if not isinstance(date, datetime):
+        return ""
+    return date.strftime("%H:%M")
+
+
+def is_date_in_future(date: datetime) -> bool:
+    """Проверяет, что дата в будущем"""
+    return date > datetime.now()
+================================================================================
+    📄 notification_utils.py
+
+================================================================================
+ФАЙЛ: utils/notification_utils.py
+================================================================================
+
+================================================================================

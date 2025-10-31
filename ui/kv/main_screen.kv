@@ -4,27 +4,27 @@
 
     canvas.before:
         Color:
-            rgba: 0.98, 0.98, 0.98, 1
+            rgba: 0.97, 0.98, 0.99, 1
         Rectangle:
             pos: self.pos
             size: self.size
 
     BoxLayout:
         orientation: "vertical"
-        padding: [dp(20), dp(20)]
-        spacing: dp(24)
+        padding: [dp(24), dp(24)]
+        spacing: dp(28)
 
         # Верхняя панель
         BoxLayout:
             size_hint_y: None
-            height: dp(48)
+            height: dp(52)
             spacing: dp(16)
 
             Label:
                 text: "Сегодня"
-                font_size: "32sp"
+                font_size: "28sp"
                 bold: True
-                color: 0.1, 0.1, 0.1, 1
+                color: 0.12, 0.18, 0.3, 1
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
@@ -34,61 +34,76 @@
         # Кнопки действий
         BoxLayout:
             size_hint_y: None
-            height: dp(48)
-            spacing: dp(12)
+            height: dp(52)
+            spacing: dp(14)
 
             Button:
-                text: "+ Новая задача"
-                font_size: "15sp"
+                text: "НОВАЯ ЗАДАЧА"
+                font_size: "14sp"
                 bold: True
-                background_color: 0.2, 0.6, 1, 1
+                background_color: 0, 0, 0, 0
                 background_normal: ""
                 color: 1, 1, 1, 1
                 on_press: root._go_to_task_editor()
                 canvas.before:
                     Color:
-                        rgba: 0.2, 0.6, 1, 1
+                        rgba: 0.25, 0.65, 0.95, 1
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [dp(24)]
+                        radius: [dp(16)]
+                    Color:
+                        rgba: 0.18, 0.55, 0.85, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                        width: 2
 
             Button:
-                text: "Календарь"
-                font_size: "15sp"
-                background_color: 0.95, 0.95, 0.95, 1
+                text: "КАЛЕНДАРЬ"
+                font_size: "14sp"
+                background_color: 0, 0, 0, 0
                 background_normal: ""
-                color: 0.3, 0.3, 0.3, 1
+                color: 0.5, 0.5, 0.6, 1
                 on_press: root._go_to_calendar()
                 canvas.before:
                     Color:
-                        rgba: 0.95, 0.95, 0.95, 1
+                        rgba: 0.97, 0.98, 0.99, 1
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [dp(24)]
+                        radius: [dp(16)]
+                    Color:
+                        rgba: 0.85, 0.88, 0.92, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                        width: 1.8
 
             Button:
-                text: "Статистика"
-                font_size: "15sp"
-                background_color: 0.95, 0.95, 0.95, 1
+                text: "СТАТИСТИКА"
+                font_size: "14sp"
+                background_color: 0, 0, 0, 0
                 background_normal: ""
-                color: 0.3, 0.3, 0.3, 1
+                color: 0.5, 0.5, 0.6, 1
                 on_press: root._go_to_statistics()
                 canvas.before:
                     Color:
-                        rgba: 0.95, 0.95, 0.95, 1
+                        rgba: 0.97, 0.98, 0.99, 1
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [dp(24)]
+                        radius: [dp(16)]
+                    Color:
+                        rgba: 0.85, 0.88, 0.92, 1
+                    Line:
+                        rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                        width: 1.8
 
         # Список задач
         ScrollView:
             do_scroll_x: False
-            bar_color: 0.2, 0.6, 1, 0.6
-            bar_width: dp(4)
-            bar_inactive_color: 0.2, 0.6, 1, 0.3
+            bar_color: 0.25, 0.65, 0.95, 0.7
+            bar_width: dp(5)
+            bar_inactive_color: 0.25, 0.65, 0.95, 0.3
             scroll_type: ['bars', 'content']
             effect_cls: "ScrollEffect"
 
@@ -97,5 +112,5 @@
                 orientation: "vertical"
                 size_hint_y: None
                 spacing: 0
-                padding: [dp(4), dp(8), dp(4), dp(20)]
+                padding: [dp(6), dp(10), dp(6), dp(25)]
                 height: self.minimum_height

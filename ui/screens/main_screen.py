@@ -25,12 +25,14 @@ class MainScreen(Screen):
 
     def _load_tasks(self, dt=None):
         """Загружает задачи при входе на экран"""
+        print("MainScreen: Загрузка задач...")
         if self.task_service and self.tasks_container:
             self._update_tasks_display()
 
     def _update_tasks_display(self):
         """Обновляет отображение задач"""
         if not self.tasks_container:
+            print("MainScreen: tasks_container не найден")
             return
 
         self.tasks_container.clear_widgets()
@@ -60,6 +62,7 @@ class MainScreen(Screen):
             print(f"MainScreen: Ошибка загрузки задач: {e}")
             import traceback
             traceback.print_exc()
+            self._show_error_state()
 
     def _show_empty_state(self):
         """Показывает красивое состояние при отсутствии задач"""
@@ -88,18 +91,45 @@ class MainScreen(Screen):
         self.tasks_container.add_widget(empty_container)
         print("MainScreen: Нет задач на сегодня")
 
+    def _show_error_state(self):
+        """Показывает состояние ошибки"""
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.label import Label
+
+        error_container = BoxLayout(
+            orientation='vertical',
+            size_hint_y=None,
+            height=dp(180),
+            padding=dp(40),
+            spacing=dp(16)
+        )
+
+        error_label = Label(
+            text="[color=ff4444]⚠[/color]\n[b]Ошибка загрузки задач[/b]\n\nПопробуйте перезагрузить приложение",
+            font_size='16sp',
+            color=(0.6, 0.6, 0.6, 1),
+            halign='center',
+            valign='middle',
+            text_size=(None, None),
+            markup=True
+        )
+
+        error_container.add_widget(error_label)
+        self.tasks_container.add_widget(error_container)
+
     def _complete_task(self, task_id):
         """Отмечает задачу как выполненную"""
         try:
             self.task_service.complete_task(task_id)
-            # Не обновляем сразу - пусть пользователь видит анимацию
-            Clock.schedule_once(lambda dt: self._update_tasks_display(), 0.3)
+            # Обновляем отображение после небольшой задержки
+            Clock.schedule_once(lambda dt: self._update_tasks_display(), 0.5)
             print(f"Задача {task_id} отмечена как выполненная")
         except Exception as e:
             print(f"Ошибка выполнения задачи: {e}")
 
     def on_enter(self, *args):
         """Обновляет задачи при входе на экран"""
+        print("MainScreen: Вход на экран")
         Clock.schedule_once(self._load_tasks, 0.1)
 
     def _go_to_task_editor(self, instance=None):
