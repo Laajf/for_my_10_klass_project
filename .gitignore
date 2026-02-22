@@ -1,0 +1,18 @@
+# Virtual environment
+venv/
+env/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Buildozer local files
+.buildozer/
+bin/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
