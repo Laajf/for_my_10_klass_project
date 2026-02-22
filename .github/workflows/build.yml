@@ -36,6 +36,9 @@ jobs:
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
           unzip -q /tmp/cmdline-tools.zip -d /tmp/
           cp -r /tmp/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/
+          # Создаём символическую ссылку для совместимости со старым путём buildozer
+          mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
+          ln -sf ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
           # Принимаем все лицензии
           yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           # Устанавливаем платформу и build-tools
