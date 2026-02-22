@@ -44,10 +44,6 @@ Smart Planner — это удобное приложение для управл
    pip install --upgrade pip
    pip install kivy google-genai requests cython==0.29.36
    ```
-   Либо, если есть `requirements.txt`:
-   ```bash
-   pip install -r requirements.txt
-   ```
 
 4. Получите API-ключ Google Gemini:
    - Перейдите в [Google AI Studio](https://aistudio.google.com/apikey).
