@@ -21,12 +21,25 @@ jobs:
             git zip unzip openjdk-17-jdk python3-pip \
             autoconf libtool pkg-config zlib1g-dev \
             libncurses5-dev libncursesw5-dev \
-            cmake libffi-dev libssl-dev
+            cmake libffi-dev libssl-dev wget
 
       - name: Install Python packages
         run: |
           pip install --upgrade pip
           pip install cython==0.29.36 buildozer
+
+      - name: Setup Android SDK and build-tools
+        run: |
+          # Создаём структуру SDK
+          mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+          # Скачиваем command line tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d /tmp/
+          cp -r /tmp/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/
+          # Принимаем все лицензии
+          yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          # Устанавливаем платформу и build-tools
+          ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3"
 
       - name: Build with buildozer
         run: |
