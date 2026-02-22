@@ -13,6 +13,7 @@ class SmartPlannerApp(App):
         from ui.screens.task_editor import TaskEditorScreen
         from ui.screens.calendar_view import CalendarScreen
         from ui.screens.statistics_screen import StatisticsScreen
+        from ui.screens.ai_plan_screen import AIPlanScreen
 
         # Инициализируем сервисы
         from services.task_service import TaskService
@@ -24,6 +25,7 @@ class SmartPlannerApp(App):
         sm.add_widget(TaskEditorScreen(name='task_editor', task_service=self.task_service))
         sm.add_widget(CalendarScreen(name='calendar', task_service=self.task_service))
         sm.add_widget(StatisticsScreen(name='statistics', task_service=self.task_service))
+        sm.add_widget(AIPlanScreen(name='ai_plan', task_service=self.task_service))
 
         # Сохраняем ссылку на менеджер для доступа из экранов
         self.sm = sm

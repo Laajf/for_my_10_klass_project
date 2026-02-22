@@ -6,7 +6,7 @@ def get_project_structure(root_dir):
     """Собирает структуру проекта в текстовый файл"""
 
     # Игнорируемые папки и файлы
-    ignore_dirs = {'__pycache__', '.git', '.idea', 'venv', 'env', 'node_modules'}
+    ignore_dirs = {'__pycache__', '.git', '.idea', 'venv', 'env', 'node_modules', '.buildozer'}
     ignore_files = {'.DS_Store', '.gitignore', '*.pyc'}
 
     output_lines = []

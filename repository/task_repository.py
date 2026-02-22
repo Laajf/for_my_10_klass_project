@@ -8,10 +8,12 @@ from utils.config import ensure_data_dir, TASKS_FILE
 
 
 class TaskRepository:
+
     def __init__(self, storage_file=TASKS_FILE):
         ensure_data_dir()
         self.storage_file = storage_file
         self._ensure_storage_exists()
+        print("STORAGE FILE:", self.storage_file)
 
     def _ensure_storage_exists(self):
         """Создает файл хранилища если он не существует"""
@@ -90,6 +92,7 @@ class TaskRepository:
     def get_all_tasks(self) -> List[Task]:
         """Получает все задачи"""
         tasks_data = self._load_tasks()
+        print(f"get_all_tasks: loaded {len(tasks_data)} tasks from {self.storage_file}")  # добавьте эту строку
         return [self._dict_to_task(task_data) for task_data in tasks_data]
 
     def update_task(self, task: Task):
@@ -139,3 +142,4 @@ class TaskRepository:
         """Получает задачи по приоритету"""
         all_tasks = self.get_all_tasks()
         return [task for task in all_tasks if task.priority == priority]
+

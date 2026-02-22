@@ -6,6 +6,7 @@
 ================================================================================
 ФАЙЛ: .DS_Store (бинарный файл, содержимое пропущено)
 ================================================================================
+📁 .empty/
 📁 assets/
     📄 .DS_Store
 
@@ -14,6 +15,468 @@
 ================================================================================
     📁 fonts/
     📁 icons/
+📁 bin/
+📄 buildozer.spec
+
+================================================================================
+ФАЙЛ: buildozer.spec
+================================================================================
+[app]
+
+# (str) Title of your application
+title = My Application
+
+# (str) Package name
+package.name = myapp
+
+# (str) Package domain (needed for android/ios packaging)
+package.domain = org.test
+
+# (str) Source code where the main.py live
+source.dir = .
+
+# (list) Source files to include (let empty to include all the files)
+source.include_exts = py,png,jpg,kv,atlas
+
+# (list) List of inclusions using pattern matching
+#source.include_patterns = assets/*,images/*.png
+
+# (list) Source files to exclude (let empty to not exclude anything)
+#source.exclude_exts = spec
+
+# (list) List of directory to exclude (let empty to not exclude anything)
+#source.exclude_dirs = tests, bin, venv
+
+# (list) List of exclusions using pattern matching
+# Do not prefix with './'
+#source.exclude_patterns = license,images/*/*.jpg
+
+# (str) Application versioning (method 1)
+version = 0.1
+
+# (str) Application versioning (method 2)
+# version.regex = __version__ = ['"](.*)['"]
+# version.filename = %(source.dir)s/main.py
+
+# (list) Application requirements
+# comma separated e.g. requirements = sqlite3,kivy
+requirements = python3,kivy,google-generativeai,requests,cython==0.29.36
+
+# (str) Custom source folders for requirements
+# Sets custom source for any requirements with recipes
+# requirements.source.kivy = ../../kivy
+
+# (str) Presplash of the application
+#presplash.filename = %(source.dir)s/data/presplash.png
+
+# (str) Icon of the application
+#icon.filename = %(source.dir)s/data/icon.png
+
+# (list) Supported orientations
+# Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
+orientation = portrait
+
+# (list) List of service to declare
+#services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
+
+#
+# OSX Specific
+#
+
+#
+# author = © Copyright Info
+
+# change the major version of python used by the app
+osx.python_version = 3
+
+# Kivy version to use
+osx.kivy_version = 1.9.1
+
+#
+# Android specific
+#
+
+# (bool) Indicate if the application should be fullscreen or not
+fullscreen = 0
+
+# (string) Presplash background color (for android toolchain)
+# Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
+# red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
+# darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
+# olive, purple, silver, teal.
+#android.presplash_color = #FFFFFF
+
+# (string) Presplash animation using Lottie format.
+# see https://lottiefiles.com/ for examples and https://airbnb.design/lottie/
+# for general documentation.
+# Lottie files can be created using various tools, like Adobe After Effect or Synfig.
+#android.presplash_lottie = "path/to/lottie/file.json"
+
+# (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
+#icon.adaptive_foreground.filename = %(source.dir)s/data/icon_fg.png
+#icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
+
+# (list) Permissions
+# (See https://python-for-android.readthedocs.io/en/latest/buildoptions/#build-options-1 for all the supported syntaxes and properties)
+android.permissions = INTERNET, POST_NOTIFICATIONS, VIBRATE
+
+# (list) features (adds uses-feature -tags to manifest)
+#android.features = android.hardware.usb.host
+
+# (int) Target Android API, should be as high as possible.
+android.api = 29
+
+# (int) Minimum API your APK / AAB will support.
+#android.minapi = 21
+
+# (int) Android SDK version to use
+#android.sdk = 20
+
+# (str) Android NDK version to use
+#android.ndk = 23b
+
+# (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
+#android.ndk_api = 21
+
+# (bool) Use --private data storage (True) or --dir public storage (False)
+#android.private_storage = True
+
+# (str) Android NDK directory (if empty, it will be automatically downloaded.)
+#android.ndk_path =
+
+# (str) Android SDK directory (if empty, it will be automatically downloaded.)
+#android.sdk_path =
+
+# (str) ANT directory (if empty, it will be automatically downloaded.)
+#android.ant_path =
+
+# (bool) If True, then skip trying to update the Android sdk
+# This can be useful to avoid excess Internet downloads or save time
+# when an update is due and you just want to test/build your package
+# android.skip_update = False
+
+# (bool) If True, then automatically accept SDK license
+# agreements. This is intended for automation only. If set to False,
+# the default, you will be shown the license when first running
+# buildozer.
+# android.accept_sdk_license = False
+
+# (str) Android entry point, default is ok for Kivy-based app
+#android.entrypoint = org.kivy.android.PythonActivity
+
+# (str) Full name including package path of the Java class that implements Android Activity
+# use that parameter together with android.entrypoint to set custom Java class instead of PythonActivity
+#android.activity_class_name = org.kivy.android.PythonActivity
+
+# (str) Extra xml to write directly inside the <manifest> element of AndroidManifest.xml
+# use that parameter to provide a filename from where to load your custom XML code
+#android.extra_manifest_xml = ./src/android/extra_manifest.xml
+
+# (str) Extra xml to write directly inside the <manifest><application> tag of AndroidManifest.xml
+# use that parameter to provide a filename from where to load your custom XML arguments:
+#android.extra_manifest_application_arguments = ./src/android/extra_manifest_application_arguments.xml
+
+# (str) Full name including package path of the Java class that implements Python Service
+# use that parameter to set custom Java class which extends PythonService
+#android.service_class_name = org.kivy.android.PythonService
+
+# (str) Android app theme, default is ok for Kivy-based app
+# android.apptheme = "@android:style/Theme.NoTitleBar"
+
+# (list) Pattern to whitelist for the whole project
+#android.whitelist =
+
+# (str) Path to a custom whitelist file
+#android.whitelist_src =
+
+# (str) Path to a custom blacklist file
+#android.blacklist_src =
+
+# (list) List of Java .jar files to add to the libs so that pyjnius can access
+# their classes. Don't add jars that you do not need, since extra jars can slow
+# down the build process. Allows wildcards matching, for example:
+# OUYA-ODK/libs/*.jar
+#android.add_jars = foo.jar,bar.jar,path/to/more/*.jar
+
+# (list) List of Java files to add to the android project (can be java or a
+# directory containing the files)
+#android.add_src =
+
+# (list) Android AAR archives to add
+#android.add_aars =
+
+# (list) Put these files or directories in the apk assets directory.
+# Either form may be used, and assets need not be in 'source.include_exts'.
+# 1) android.add_assets = source_asset_relative_path
+# 2) android.add_assets = source_asset_path:destination_asset_relative_path
+#android.add_assets =
+
+# (list) Put these files or directories in the apk res directory.
+# The option may be used in three ways, the value may contain one or zero ':'
+# Some examples:
+# 1) A file to add to resources, legal resource names contain ['a-z','0-9','_']
+# android.add_resources = my_icons/all-inclusive.png:drawable/all_inclusive.png
+# 2) A directory, here  'legal_icons' must contain resources of one kind
+# android.add_resources = legal_icons:drawable
+# 3) A directory, here 'legal_resources' must contain one or more directories, 
+# each of a resource kind:  drawable, xml, etc...
+# android.add_resources = legal_resources
+#android.add_resources =
+
+# (list) Gradle dependencies to add
+#android.gradle_dependencies =
+
+# (bool) Enable AndroidX support. Enable when 'android.gradle_dependencies'
+# contains an 'androidx' package, or any package from Kotlin source.
+# android.enable_androidx requires android.api >= 28
+#android.enable_androidx = True
+
+# (list) add java compile options
+# this can for example be necessary when importing certain java libraries using the 'android.gradle_dependencies' option
+# see https://developer.android.com/studio/write/java8-support for further information
+# android.add_compile_options = "sourceCompatibility = 1.8", "targetCompatibility = 1.8"
+
+# (list) Gradle repositories to add {can be necessary for some android.gradle_dependencies}
+# please enclose in double quotes 
+# e.g. android.gradle_repositories = "maven { url 'https://kotlin.bintray.com/ktor' }"
+#android.add_gradle_repositories =
+
+# (list) packaging options to add 
+# see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.PackagingOptions.html
+# can be necessary to solve conflicts in gradle_dependencies
+# please enclose in double quotes 
+# e.g. android.add_packaging_options = "exclude 'META-INF/common.kotlin_module'", "exclude 'META-INF/*.kotlin_module'"
+#android.add_packaging_options =
+
+# (list) Java classes to add as activities to the manifest.
+#android.add_activities = com.example.ExampleActivity
+
+# (str) OUYA Console category. Should be one of GAME or APP
+# If you leave this blank, OUYA support will not be enabled
+#android.ouya.category = GAME
+
+# (str) Filename of OUYA Console icon. It must be a 732x412 png image.
+#android.ouya.icon.filename = %(source.dir)s/data/ouya_icon.png
+
+# (str) XML file to include as an intent filters in <activity> tag
+#android.manifest.intent_filters =
+
+# (list) Copy these files to src/main/res/xml/ (used for example with intent-filters)
+#android.res_xml = PATH_TO_FILE,
+
+# (str) launchMode to set for the main activity
+#android.manifest.launch_mode = standard
+
+# (str) screenOrientation to set for the main activity.
+# Valid values can be found at https://developer.android.com/guide/topics/manifest/activity-element
+#android.manifest.orientation = fullSensor
+
+# (list) Android additional libraries to copy into libs/armeabi
+#android.add_libs_armeabi = libs/android/*.so
+#android.add_libs_armeabi_v7a = libs/android-v7/*.so
+#android.add_libs_arm64_v8a = libs/android-v8/*.so
+#android.add_libs_x86 = libs/android-x86/*.so
+#android.add_libs_mips = libs/android-mips/*.so
+
+# (bool) Indicate whether the screen should stay on
+# Don't forget to add the WAKE_LOCK permission if you set this to True
+#android.wakelock = False
+
+# (list) Android application meta-data to set (key=value format)
+#android.meta_data =
+
+# (list) Android library project to add (will be added in the
+# project.properties automatically.)
+#android.library_references =
+
+# (list) Android shared libraries which will be added to AndroidManifest.xml using <uses-library> tag
+#android.uses_library =
+
+# (str) Android logcat filters to use
+#android.logcat_filters = *:S python:D
+
+# (bool) Android logcat only display log for activity's pid
+#android.logcat_pid_only = False
+
+# (str) Android additional adb arguments
+#android.adb_args = -H host.docker.internal
+
+# (bool) Copy library instead of making a libpymodules.so
+#android.copy_libs = 1
+
+# (list) The Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
+# In past, was `android.arch` as we weren't supporting builds for multiple archs at the same time.
+android.archs = arm64-v8a, armeabi-v7a
+
+# (int) overrides automatic versionCode computation (used in build.gradle)
+# this is not the same as app version and should only be edited if you know what you're doing
+# android.numeric_version = 1
+
+# (bool) enables Android auto backup feature (Android API >=23)
+android.allow_backup = True
+
+# (str) XML file for custom backup rules (see official auto backup documentation)
+# android.backup_rules =
+
+# (str) If you need to insert variables into your AndroidManifest.xml file,
+# you can do so with the manifestPlaceholders property.
+# This property takes a map of key-value pairs. (via a string)
+# Usage example : android.manifest_placeholders = [myCustomUrl:\"org.kivy.customurl\"]
+# android.manifest_placeholders = [:]
+
+# (bool) Skip byte compile for .py files
+# android.no-byte-compile-python = False
+
+# (str) The format used to package the app for release mode (aab or apk or aar).
+# android.release_artifact = aab
+
+# (str) The format used to package the app for debug mode (apk or aar).
+# android.debug_artifact = apk
+
+#
+# Python for android (p4a) specific
+#
+
+# (str) python-for-android URL to use for checkout
+#p4a.url =
+
+# (str) python-for-android fork to use in case if p4a.url is not specified, defaults to upstream (kivy)
+#p4a.fork = kivy
+
+# (str) python-for-android branch to use, defaults to master
+#p4a.branch = master
+
+# (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
+#p4a.commit = HEAD
+
+# (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
+#p4a.source_dir =
+
+# (str) The directory in which python-for-android should look for your own build recipes (if any)
+#p4a.local_recipes =
+
+# (str) Filename to the hook for p4a
+#p4a.hook =
+
+# (str) Bootstrap to use for android builds
+# p4a.bootstrap = sdl2
+
+# (int) port number to specify an explicit --port= p4a argument (eg for bootstrap flask)
+#p4a.port =
+
+# Control passing the --use-setup-py vs --ignore-setup-py to p4a
+# "in the future" --use-setup-py is going to be the default behaviour in p4a, right now it is not
+# Setting this to false will pass --ignore-setup-py, true will pass --use-setup-py
+# NOTE: this is general setuptools integration, having pyproject.toml is enough, no need to generate
+# setup.py if you're using Poetry, but you need to add "toml" to source.include_exts.
+#p4a.setup_py = false
+
+# (str) extra command line arguments to pass when invoking pythonforandroid.toolchain
+#p4a.extra_args =
+
+
+
+#
+# iOS specific
+#
+
+# (str) Path to a custom kivy-ios folder
+#ios.kivy_ios_dir = ../kivy-ios
+# Alternately, specify the URL and branch of a git checkout:
+ios.kivy_ios_url = https://github.com/kivy/kivy-ios
+ios.kivy_ios_branch = master
+
+# Another platform dependency: ios-deploy
+# Uncomment to use a custom checkout
+#ios.ios_deploy_dir = ../ios_deploy
+# Or specify URL and branch
+ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
+ios.ios_deploy_branch = 1.10.0
+
+# (bool) Whether or not to sign the code
+ios.codesign.allowed = false
+
+# (str) Name of the certificate to use for signing the debug version
+# Get a list of available identities: buildozer ios list_identities
+#ios.codesign.debug = "iPhone Developer: <lastname> <firstname> (<hexstring>)"
+
+# (str) The development team to use for signing the debug version
+#ios.codesign.development_team.debug = <hexstring>
+
+# (str) Name of the certificate to use for signing the release version
+#ios.codesign.release = %(ios.codesign.debug)s
+
+# (str) The development team to use for signing the release version
+#ios.codesign.development_team.release = <hexstring>
+
+# (str) URL pointing to .ipa file to be installed
+# This option should be defined along with `display_image_url` and `full_size_image_url` options.
+#ios.manifest.app_url =
+
+# (str) URL pointing to an icon (57x57px) to be displayed during download
+# This option should be defined along with `app_url` and `full_size_image_url` options.
+#ios.manifest.display_image_url =
+
+# (str) URL pointing to a large icon (512x512px) to be used by iTunes
+# This option should be defined along with `app_url` and `display_image_url` options.
+#ios.manifest.full_size_image_url =
+
+
+[buildozer]
+
+# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
+log_level = 2
+
+# (int) Display warning if buildozer is run as root (0 = False, 1 = True)
+warn_on_root = 1
+
+# (str) Path to build artifact storage, absolute or relative to spec file
+# build_dir = ./.buildozer
+
+# (str) Path to build output (i.e. .apk, .aab, .ipa) storage
+# bin_dir = ./bin
+
+#    -----------------------------------------------------------------------------
+#    List as sections
+#
+#    You can define all the "list" as [section:key].
+#    Each line will be considered as a option to the list.
+#    Let's take [app] / source.exclude_patterns.
+#    Instead of doing:
+#
+#[app]
+
+android.accept_sdk_license = True
+#source.exclude_patterns = license,data/audio/*.wav,data/images/original/*
+#
+#    This can be translated into:
+#
+#[app:source.exclude_patterns]
+#license
+#data/audio/*.wav
+#data/images/original/*
+#
+
+
+#    -----------------------------------------------------------------------------
+#    Profiles
+#
+#    You can extend section / key with a profile
+#    For example, you want to deploy a demo version of your application without
+#    HD content. You could first change the title to add "(demo)" in the name
+#    and extend the excluded directories to remove the HD content.
+#
+#[app@demo]
+#title = My Application (demo)
+#
+#[app:source.exclude_patterns@demo]
+#images/hd/*
+#
+#    Then, invoke the command line with the "demo" profile:
+#
+#buildozer --profile demo android debug
+
+================================================================================
 📁 core/
     📄 .DS_Store
 
@@ -115,7 +578,7 @@ def get_project_structure(root_dir):
     """Собирает структуру проекта в текстовый файл"""
 
     # Игнорируемые папки и файлы
-    ignore_dirs = {'__pycache__', '.git', '.idea', 'venv', 'env', 'node_modules'}
+    ignore_dirs = {'__pycache__', '.git', '.idea', 'venv', 'env', 'node_modules', '.buildozer'}
     ignore_files = {'.DS_Store', '.gitignore', '*.pyc'}
 
     output_lines = []
@@ -244,6 +707,7 @@ class SmartPlannerApp(App):
         from ui.screens.task_editor import TaskEditorScreen
         from ui.screens.calendar_view import CalendarScreen
         from ui.screens.statistics_screen import StatisticsScreen
+        from ui.screens.ai_plan_screen import AIPlanScreen
 
         # Инициализируем сервисы
         from services.task_service import TaskService
@@ -255,6 +719,7 @@ class SmartPlannerApp(App):
         sm.add_widget(TaskEditorScreen(name='task_editor', task_service=self.task_service))
         sm.add_widget(CalendarScreen(name='calendar', task_service=self.task_service))
         sm.add_widget(StatisticsScreen(name='statistics', task_service=self.task_service))
+        sm.add_widget(AIPlanScreen(name='ai_plan', task_service=self.task_service))
 
         # Сохраняем ссылку на менеджер для доступа из экранов
         self.sm = sm
@@ -306,10 +771,12 @@ from utils.config import ensure_data_dir, TASKS_FILE
 
 
 class TaskRepository:
+
     def __init__(self, storage_file=TASKS_FILE):
         ensure_data_dir()
         self.storage_file = storage_file
         self._ensure_storage_exists()
+        print("STORAGE FILE:", self.storage_file)
 
     def _ensure_storage_exists(self):
         """Создает файл хранилища если он не существует"""
@@ -388,6 +855,7 @@ class TaskRepository:
     def get_all_tasks(self) -> List[Task]:
         """Получает все задачи"""
         tasks_data = self._load_tasks()
+        print(f"get_all_tasks: loaded {len(tasks_data)} tasks from {self.storage_file}")  # добавьте эту строку
         return [self._dict_to_task(task_data) for task_data in tasks_data]
 
     def update_task(self, task: Task):
@@ -437,6 +905,8 @@ class TaskRepository:
         """Получает задачи по приоритету"""
         all_tasks = self.get_all_tasks()
         return [task for task in all_tasks if task.priority == priority]
+
+
 ================================================================================
 📁 services/
     📄 .DS_Store
@@ -458,58 +928,6 @@ class TaskRepository:
 ================================================================================
 
 ================================================================================
-    📄 notification_service.py
-
-================================================================================
-ФАЙЛ: services/notification_service.py
-================================================================================
-from datetime import datetime
-from core.models import Task
-from plyer import notification
-import threading
-import time
-
-
-class NotificationService:
-    def __init__(self):
-        self.scheduled_reminders = {}
-
-    def schedule_reminder(self, task: Task):
-        """Планирует напоминание для задачи"""
-        if not task.reminder_time:
-            return
-
-        reminder_id = f"task_{task.id}"
-
-        # Отменяем существующее напоминание
-        self.cancel_reminder(task.id)
-
-        # Вычисляем задержку до напоминания
-        now = datetime.now()
-        delay = (task.reminder_time - now).total_seconds()
-
-        if delay > 0:
-            timer = threading.Timer(delay, self._show_notification, [task])
-            timer.start()
-            self.scheduled_reminders[task.id] = timer
-
-    def _show_notification(self, task: Task):
-        """Показывает уведомление"""
-        try:
-            notification.notify(
-                title=f"Напоминание: {task.title}",
-                message=f"Срок выполнения: {task.due_date.strftime('%H:%M')}",
-                timeout=10
-            )
-        except Exception as e:
-            print(f"Ошибка показа уведомления: {e}")
-
-    def cancel_reminder(self, task_id: str):
-        """Отменяет запланированное напоминание"""
-        if task_id in self.scheduled_reminders:
-            self.scheduled_reminders[task_id].cancel()
-            del self.scheduled_reminders[task_id]
-================================================================================
     📄 reminder_service.py
 
 ================================================================================
@@ -527,14 +945,13 @@ from datetime import datetime
 from typing import List, Optional
 from core.models import Task, TaskStatus, Priority
 from repository.task_repository import TaskRepository
-from services.notification_service import NotificationService
 from core.exceptions import InvalidTaskDataException
 
 
 class TaskService:
     def __init__(self):
         self.task_repository = TaskRepository()
-        self.notification_service = NotificationService()
+        # self.notification_service = NotificationService()  # отключено для сборки
         print("TaskService инициализирован")
 
     def create_task(self, title: str, description: str, priority: Priority, due_date: datetime,
@@ -559,44 +976,35 @@ class TaskService:
         self.task_repository.add_task(task)
         print(f"Задача сохранена в репозиторий: {task.title}")
 
-        # Планируем напоминание если указано
-        if reminder_time:
-            self.notification_service.schedule_reminder(task)
+        # if reminder_time:
+        #     self.notification_service.schedule_reminder(task)  # отключено
 
         return task
 
     def get_all_tasks(self) -> List[Task]:
-        """Получает все задачи"""
         tasks = self.task_repository.get_all_tasks()
         print(f"Загружено задач из репозитория: {len(tasks)}")
         return tasks
 
     def get_today_tasks(self) -> List[Task]:
-        """Получает задачи на сегодня"""
         today = datetime.now().date()
         all_tasks = self.get_all_tasks()
         today_tasks = [task for task in all_tasks if
                       task.due_date.date() == today and
                       task.status != TaskStatus.COMPLETED]
         print(f"Задачи на сегодня: {len(today_tasks)}")
-        for task in today_tasks:
-            print(f"  - {task.title} (статус: {task.status.value}, дата: {task.due_date.date()})")
         return today_tasks
 
     def complete_task(self, task_id: str):
-        """Отмечает задачу как выполненную"""
         task = self.task_repository.get_task(task_id)
         if task:
             task.status = TaskStatus.COMPLETED
             task.completed_date = datetime.now()
             self.task_repository.update_task(task)
-
-            # Отменяем напоминание для выполненной задачи
-            self.notification_service.cancel_reminder(task_id)
+            # self.notification_service.cancel_reminder(task_id)  # отключено
             print(f"Задача выполнена: {task.title}")
 
     def update_task(self, task_id: str, **kwargs):
-        """Обновляет задачу"""
         task = self.task_repository.get_task(task_id)
         if task:
             for key, value in kwargs.items():
@@ -605,29 +1013,20 @@ class TaskService:
             self.task_repository.update_task(task)
 
     def delete_task(self, task_id: str):
-        """Удаляет задачу"""
-        self.notification_service.cancel_reminder(task_id)
+        # self.notification_service.cancel_reminder(task_id)  # отключено
         self.task_repository.delete_task(task_id)
 
     def get_tasks_by_date(self, date: datetime) -> List[Task]:
-        """Получает задачи на определенную дату"""
         tasks = self.task_repository.get_tasks_by_date(date)
         print(f"Задачи на {date.date()}: {len(tasks)}")
-        for task in tasks:
-            print(f"  - {task.title} (статус: {task.status.value})")
         return tasks
-================================================================================
-📄 smart_planner.zip
-
-================================================================================
-ФАЙЛ: smart_planner.zip (бинарный файл, содержимое пропущено)
 ================================================================================
 📄 tasks.json
 
 ================================================================================
 ФАЙЛ: tasks.json
 ================================================================================
-[]
+
 ================================================================================
 📁 ui/
     📄 .DS_Store
@@ -643,6 +1042,423 @@ class TaskService:
 
 ================================================================================
     📁 kv/
+        📄 .DS_Store
+
+================================================================================
+ФАЙЛ: ui/kv/.DS_Store (бинарный файл, содержимое пропущено)
+================================================================================
+        📄 ai_plan_screen.kv
+
+================================================================================
+ФАЙЛ: ui/kv/ai_plan_screen.kv
+================================================================================
+<AIPlanScreen>:
+    name: "ai_plan"
+
+    canvas.before:
+        Color:
+            rgba: 0.97, 0.98, 0.99, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [dp(24), dp(24)]
+        spacing: dp(20)
+
+        # Верхняя панель
+        BoxLayout:
+            size_hint_y: None
+            height: dp(60)
+            spacing: dp(12)
+
+            Button:
+                text: "‹ Назад"
+                font_size: "16sp"
+                size_hint_x: 0.25
+                background_color: 0, 0, 0, 0
+                background_normal: ""
+                color: 0.25, 0.65, 0.95, 1
+                bold: True
+                on_press: root.go_back()
+                canvas.before:
+                    Color:
+                        rgba: 0.92, 0.96, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(12)]
+
+            Label:
+                text: "AI План"
+                font_size: "22sp"
+                bold: True
+                color: 0.12, 0.18, 0.3, 1
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+
+            Widget:
+                size_hint_x: 0.25
+
+        ScrollView:
+            do_scroll_x: False
+            bar_color: 0.25, 0.65, 0.95, 0.7
+            bar_width: dp(5)
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(20)
+                padding: [dp(10), dp(10)]
+
+                # Поле цели
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(85)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ЦЕЛЬ"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    TextInput:
+                        text: root.goal
+                        on_text: root.goal = self.text
+                        hint_text: "Что хотите достичь? (обязательно)"
+                        multiline: False
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.12, 0.18, 0.3, 1
+                        padding: [dp(18), dp(14)]
+                        font_size: '16sp'
+                        cursor_color: 0.25, 0.65, 0.95, 1
+                        hint_text_color: 0.7, 0.7, 0.8, 1
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(14)]
+                            Color:
+                                rgba: 0.88, 0.92, 0.96, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
+
+                # Текущий уровень
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(75)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ТЕКУЩИЙ УРОВЕНЬ (необязательно)"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    TextInput:
+                        text: root.current_level
+                        on_text: root.current_level = self.text
+                        hint_text: "Например: подтягиваюсь 5 раз"
+                        multiline: False
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.12, 0.18, 0.3, 1
+                        padding: [dp(18), dp(14)]
+                        font_size: '16sp'
+                        cursor_color: 0.25, 0.65, 0.95, 1
+                        hint_text_color: 0.7, 0.7, 0.8, 1
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(14)]
+                            Color:
+                                rgba: 0.88, 0.92, 0.96, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
+
+                # Желаемый уровень
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(75)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ЖЕЛАЕМЫЙ УРОВЕНЬ (необязательно)"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    TextInput:
+                        text: root.target_level
+                        on_text: root.target_level = self.text
+                        hint_text: "Например: хочу 30 раз"
+                        multiline: False
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.12, 0.18, 0.3, 1
+                        padding: [dp(18), dp(14)]
+                        font_size: '16sp'
+                        cursor_color: 0.25, 0.65, 0.95, 1
+                        hint_text_color: 0.7, 0.7, 0.8, 1
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(14)]
+                            Color:
+                                rgba: 0.88, 0.92, 0.96, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
+
+                # Время в день
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(85)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "МИНУТ В ДЕНЬ"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: 0.7
+                        spacing: dp(10)
+
+                        TextInput:
+                            text: str(int(root.minutes_per_day))
+                            on_text: root.minutes_per_day = int(self.text) if self.text.isdigit() else 30
+                            hint_text: "30"
+                            multiline: False
+                            input_filter: "int"
+                            background_color: 1, 1, 1, 1
+                            foreground_color: 0.12, 0.18, 0.3, 1
+                            padding: [dp(18), dp(14)]
+                            font_size: '16sp'
+                            cursor_color: 0.25, 0.65, 0.95, 1
+                            hint_text_color: 0.7, 0.7, 0.8, 1
+                            canvas.before:
+                                Color:
+                                    rgba: 1, 1, 1, 1
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [dp(14)]
+                                Color:
+                                    rgba: 0.88, 0.92, 0.96, 1
+                                Line:
+                                    rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                    width: 1.8
+
+                        Label:
+                            text: "мин"
+                            size_hint_x: 0.3
+                            color: 0.25, 0.65, 0.95, 1
+                            font_size: '16sp'
+                            bold: True
+
+                # Желаемый срок (дней)
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(75)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ЖЕЛАЕМЫЙ СРОК (дней, необязательно)"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    TextInput:
+                        text: root.desired_days
+                        on_text: root.desired_days = self.text
+                        hint_text: "60"
+                        multiline: False
+                        input_filter: "int"
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.12, 0.18, 0.3, 1
+                        padding: [dp(18), dp(14)]
+                        font_size: '16sp'
+                        cursor_color: 0.25, 0.65, 0.95, 1
+                        hint_text_color: 0.7, 0.7, 0.8, 1
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(14)]
+                            Color:
+                                rgba: 0.88, 0.92, 0.96, 1
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
+
+                # Кнопка выбора даты начала
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(75)
+                    spacing: dp(8)
+
+                    Label:
+                        text: "ДАТА НАЧАЛА"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: 0.3
+                        text_size: self.size
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    Button:
+                        text: root.start_date_text
+                        font_size: "14sp"
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        color: 0.25, 0.65, 0.95, 1
+                        bold: True
+                        on_press: root.select_start_date()
+                        size_hint_y: 0.7
+                        canvas.before:
+                            Color:
+                                rgba: 0.92, 0.96, 1, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(14)]
+                            Color:
+                                rgba: 0.25, 0.65, 0.95, 0.6
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(14)]
+                                width: 1.8
+                        canvas.after:
+                            Color:
+                                rgba: 0.25, 0.65, 0.95, 1
+                            Triangle:
+                                points: [self.right - dp(40), self.center_y - dp(4), self.right - dp(22), self.center_y - dp(4), self.right - dp(31), self.center_y + dp(6)]
+
+                # Кнопка генерации
+                Button:
+                    text: "СГЕНЕРИРОВАТЬ ПЛАН"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    on_press: root.generate_plan()
+                    canvas.before:
+                        Color:
+                            rgba: 0.25, 0.65, 0.95, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(16)]
+                        Color:
+                            rgba: 0.18, 0.55, 0.85, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                            width: 2
+
+                # Область результата
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(10)
+
+                    Label:
+                        text: "РЕЗУЛЬТАТ"
+                        font_size: "11sp"
+                        color: 0.45, 0.45, 0.55, 1
+                        size_hint_y: None
+                        height: dp(20)
+                        halign: "left"
+                        valign: "bottom"
+                        bold: True
+
+                    ScrollView:
+                        size_hint_y: None
+                        height: dp(200)
+                        do_scroll_x: False
+                        bar_color: 0.25, 0.65, 0.95, 0.7
+                        bar_width: dp(4)
+
+                        Label:
+                            text: root.result_text
+                            font_size: '14sp'
+                            color: 0.12, 0.18, 0.3, 1
+                            text_size: self.width, None
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            halign: "left"
+                            valign: "top"
+                            markup: True
+                            padding: [dp(10), dp(10)]
+
+                # Кнопка создания задач
+                Button:
+                    text: "СОЗДАТЬ ЗАДАЧИ В КАЛЕНДАРЕ"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    disabled: not root.can_create
+                    opacity: 1 if root.can_create else 0.3
+                    on_press: root.create_tasks()
+                    canvas.before:
+                        Color:
+                            rgba: 0.16, 0.63, 0.33, 1 if root.can_create else 0.5
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(16)]
+                        Color:
+                            rgba: 0.1, 0.5, 0.2, 1 if root.can_create else 0.5
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                            width: 2
+================================================================================
         📄 calendar_view.kv
 
 ================================================================================
@@ -1769,6 +2585,29 @@ class TaskService:
                                 rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
                                 width: 1.5
 
+                # ---------- Кнопка AI-планирования (новая) ----------
+                Button:
+                    text: "РАЗБИТЬ С AI"
+                    font_size: "14sp"
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    on_press: root.open_ai_plan()
+                    size_hint_y: None
+                    height: dp(50)
+                    canvas.before:
+                        Color:
+                            rgba: 0.6, 0.2, 0.8, 1  # фиолетовый
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(16)]
+                        Color:
+                            rgba: 0.5, 0.1, 0.7, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                            width: 2
+
         # ---------- Фиксированная нижняя панель ----------
         BoxLayout:
             size_hint_y: None
@@ -1830,6 +2669,399 @@ class TaskService:
 ФАЙЛ: ui/screens/__init__.py
 ================================================================================
 
+================================================================================
+        📄 ai_plan_screen.py
+
+================================================================================
+ФАЙЛ: ui/screens/ai_plan_screen.py
+================================================================================
+from kivy.uix.screenmanager import Screen
+from kivy.lang import Builder
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
+from kivy.clock import Clock
+from datetime import datetime, timedelta
+import os
+import re
+import threading
+
+from kivy.uix.modalview import ModalView
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.widget import Widget
+from kivy.metrics import dp
+
+from utils.ai_utils import estimate_min_duration_and_plan
+from core.models import Priority
+from utils.date_utils import format_date_display
+
+# Загружаем KV-файл
+kv_path = os.path.join(os.path.dirname(__file__), '..', 'kv', 'ai_plan_screen.kv')
+Builder.load_file(kv_path)
+
+
+class AIPlanScreen(Screen):
+    """Экран AI-планирования: генерация расписания по цели и создание задач."""
+
+    goal = StringProperty("")
+    current_level = StringProperty("")
+    target_level = StringProperty("")
+    minutes_per_day = NumericProperty(30)
+    desired_days = StringProperty("")
+    result_text = StringProperty("")
+    start_date_text = StringProperty("Сегодня")
+    can_create = BooleanProperty(False)
+    generated_plan = None
+
+    def __init__(self, task_service=None, **kwargs):
+        super().__init__(**kwargs)
+        self.task_service = task_service
+        self.start_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        self._loading_modal = None
+
+    def on_enter(self, *args):
+        self.goal = ""
+        self.current_level = ""
+        self.target_level = ""
+        self.minutes_per_day = 30
+        self.desired_days = ""
+        self.result_text = ""
+        self.can_create = False
+        self.generated_plan = None
+        self.start_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        self.start_date_text = format_date_display(self.start_date)
+
+    def generate_plan(self):
+        """Запускает генерацию плана в отдельном потоке, показывает модальное окно."""
+        if not self.goal.strip():
+            self.result_text = "[color=ff0000]Введите цель[/color]"
+            return
+
+        # Парсим желаемый срок, если введён
+        days_input = self.desired_days.strip()
+        if days_input:
+            try:
+                deadline = int(days_input)
+                if deadline <= 0:
+                    raise ValueError
+            except ValueError:
+                self.result_text = "[color=ff0000]Срок должен быть положительным числом[/color]"
+                return
+
+        # Показываем модальное окно загрузки
+        self._show_loading_modal()
+
+        # Запускаем AI в фоновом потоке
+        thread = threading.Thread(target=self._run_ai_estimation)
+        thread.daemon = True
+        thread.start()
+
+    def _show_loading_modal(self):
+        """Создаёт и показывает модальное окно с сообщением о загрузке."""
+        self._loading_modal = ModalView(
+            size_hint=(0.6, 0.3),
+            background_color=(0, 0, 0, 0.7),
+            auto_dismiss=False  # нельзя закрыть случайно
+        )
+        content = BoxLayout(orientation='vertical', padding=dp(20), spacing=dp(10))
+        content.add_widget(Label(
+            text="Генерация плана...\nПожалуйста, подождите",
+            font_size='18sp',
+            color=(1, 1, 1, 1),
+            halign='center',
+            valign='middle'
+        ))
+        self._loading_modal.add_widget(content)
+        self._loading_modal.open()
+
+    def _close_loading_modal(self):
+        """Закрывает модальное окно загрузки, если оно открыто."""
+        if self._loading_modal:
+            self._loading_modal.dismiss()
+            self._loading_modal = None
+
+    def _run_ai_estimation(self):
+        """Выполняет вызов AI (в фоновом потоке)."""
+        try:
+            result = estimate_min_duration_and_plan(
+                goal=self.goal,
+                current_level=self.current_level,
+                target_level=self.target_level,
+                minutes_per_day=int(self.minutes_per_day)
+            )
+            # Возвращаем результат в главный поток
+            Clock.schedule_once(lambda dt: self._on_ai_result(result))
+        except Exception as e:
+            Clock.schedule_once(lambda dt: self._on_ai_error(str(e)))
+
+    def _on_ai_result(self, result):
+        """Обрабатывает успешный результат AI (в главном потоке)."""
+        self._close_loading_modal()
+        if result == 0:
+            self.result_text = "[color=ff0000]Эта цель недостижима даже в теории. Попробуйте изменить параметры.[/color]"
+            self.can_create = False
+            self.generated_plan = None
+        else:
+            min_days, schedule = result
+            self.generated_plan = (min_days, schedule)
+            lines = [f"[b]Минимально потребуется {min_days} дней[/b]\n"]
+            lines.extend(schedule)
+            self.result_text = "\n".join(lines)
+            self.can_create = True
+
+    def _on_ai_error(self, error_msg):
+        """Обрабатывает ошибку AI (в главном потоке)."""
+        self._close_loading_modal()
+        self.result_text = f"[color=ff0000]Ошибка при обращении к AI: {error_msg}[/color]"
+        self.can_create = False
+        self.generated_plan = None
+
+    def create_tasks(self):
+        """Создаёт задачи в календаре на основе сгенерированного плана, начиная с выбранной даты."""
+        if not self.can_create or not self.generated_plan:
+            return
+
+        min_days, schedule = self.generated_plan
+        start_date = self.start_date
+
+        day_pattern = re.compile(r'День\s*(\d+)\s*:\s*(.*)', re.IGNORECASE)
+
+        tasks_created = 0
+        for line in schedule:
+            match = day_pattern.match(line.strip())
+            if match:
+                day_num = int(match.group(1))
+                action = match.group(2).strip()
+                due_date = start_date + timedelta(days=day_num - 1)
+
+                self.task_service.create_task(
+                    title=f"{self.goal} – день {day_num}",
+                    description=action,
+                    priority=Priority.MEDIUM,
+                    due_date=due_date,
+                    reminder_time=None
+                )
+                tasks_created += 1
+
+        self.result_text = f"[color=00aa00]Создано {tasks_created} задач![/color]"
+        self.can_create = False
+        self.generated_plan = None
+
+        # Возврат на главный экран через 2 секунды
+        Clock.schedule_once(lambda dt: setattr(self.manager, 'current', 'main'), 2)
+
+    def go_back(self):
+        """Возврат на экран создания задачи."""
+        self.manager.current = 'task_editor'
+
+    def select_start_date(self):
+        """Открывает диалог выбора даты начала."""
+        modal = ModalView(
+            size_hint=(0.85, 0.7),
+            background_color=(0, 0, 0, 0.3),
+            overlay_color=(0, 0, 0, 0.5)
+        )
+
+        main_layout = BoxLayout(
+            orientation='vertical',
+            spacing=dp(0),
+            padding=dp(0)
+        )
+
+        # Заголовок
+        header_layout = BoxLayout(
+            size_hint_y=0.15,
+            padding=[dp(20), dp(10)],
+            spacing=dp(10)
+        )
+        header_label = Label(
+            text='Выберите дату начала',
+            font_size='20sp',
+            bold=True,
+            color=(0.1, 0.15, 0.25, 1)
+        )
+        header_layout.add_widget(header_label)
+        main_layout.add_widget(header_layout)
+
+        # Навигация по месяцам
+        nav_layout = BoxLayout(
+            size_hint_y=0.1,
+            padding=[dp(20), dp(5)],
+            spacing=dp(10)
+        )
+
+        prev_btn = Button(
+            text='←',
+            font_size='18sp',
+            background_color=(0.9, 0.9, 0.9, 1),
+            background_normal='',
+            color=(0.3, 0.3, 0.3, 1)
+        )
+
+        temp_date = self.start_date
+        month_label = Label(
+            text=self._get_month_name(temp_date.month) + " " + str(temp_date.year),
+            font_size='16sp',
+            bold=True,
+            color=(0.1, 0.15, 0.25, 1)
+        )
+
+        next_btn = Button(
+            text='→',
+            font_size='18sp',
+            background_color=(0.9, 0.9, 0.9, 1),
+            background_normal='',
+            color=(0.3, 0.3, 0.3, 1)
+        )
+
+        nav_layout.add_widget(prev_btn)
+        nav_layout.add_widget(month_label)
+        nav_layout.add_widget(next_btn)
+        main_layout.add_widget(nav_layout)
+
+        # Дни недели
+        days_header = GridLayout(
+            cols=7,
+            size_hint_y=0.08,
+            spacing=dp(2)
+        )
+
+        days_of_week = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
+        for day in days_of_week:
+            day_label = Label(
+                text=day,
+                font_size='12sp',
+                bold=True,
+                color=(0.4, 0.4, 0.4, 1)
+            )
+            days_header.add_widget(day_label)
+        main_layout.add_widget(days_header)
+
+        # Сетка календаря
+        calendar_grid = GridLayout(
+            cols=7,
+            spacing=dp(2),
+            padding=dp(15),
+            size_hint_y=0.67
+        )
+
+        def update_grid(*args):
+            calendar_grid.clear_widgets()
+            first_day = temp_date.replace(day=1)
+            days_in_month = self._get_days_in_month(temp_date.year, temp_date.month)
+            first_weekday = first_day.weekday()
+
+            for _ in range(first_weekday):
+                calendar_grid.add_widget(Widget())
+
+            today = datetime.now().date()
+            for day in range(1, days_in_month + 1):
+                day_date = datetime(temp_date.year, temp_date.month, day).date()
+                is_today = day_date == today
+                is_selected = day_date == self.start_date.date()
+
+                if is_selected:
+                    btn = Button(
+                        text=str(day),
+                        background_color=(0.2, 0.6, 1, 1),
+                        background_normal='',
+                        color=(1, 1, 1, 1),
+                        bold=True
+                    )
+                elif is_today:
+                    btn = Button(
+                        text=str(day),
+                        background_color=(0.9, 0.95, 1, 1),
+                        background_normal='',
+                        color=(0.2, 0.6, 1, 1),
+                        bold=True
+                    )
+                else:
+                    btn = Button(
+                        text=str(day),
+                        background_color=(1, 1, 1, 1),
+                        background_normal='',
+                        color=(0.1, 0.1, 0.1, 1)
+                    )
+
+                btn.bind(on_press=lambda instance, d=day: self._on_start_date_selected(d, temp_date, modal))
+                calendar_grid.add_widget(btn)
+
+        update_grid()
+
+        def change_month(delta):
+            nonlocal temp_date
+            new_month = temp_date.month + delta
+            new_year = temp_date.year
+            if new_month > 12:
+                new_month = 1
+                new_year += 1
+            elif new_month < 1:
+                new_month = 12
+                new_year -= 1
+            temp_date = temp_date.replace(year=new_year, month=new_month, day=1)
+            month_label.text = self._get_month_name(temp_date.month) + " " + str(temp_date.year)
+            update_grid()
+
+        prev_btn.bind(on_press=lambda x: change_month(-1))
+        next_btn.bind(on_press=lambda x: change_month(1))
+
+        actions_layout = BoxLayout(
+            size_hint_y=0.1,
+            padding=[dp(20), dp(10)],
+            spacing=dp(10)
+        )
+
+        today_btn = Button(
+            text='Сегодня',
+            background_color=(0.9, 0.9, 0.9, 1),
+            background_normal='',
+            color=(0.3, 0.3, 0.3, 1)
+        )
+
+        cancel_btn = Button(
+            text='Отмена',
+            background_color=(0.9, 0.9, 0.9, 1),
+            background_normal='',
+            color=(0.3, 0.3, 0.3, 1)
+        )
+
+        actions_layout.add_widget(today_btn)
+        actions_layout.add_widget(cancel_btn)
+        main_layout.add_widget(actions_layout)
+
+        def select_today(instance):
+            self.start_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            self.start_date_text = format_date_display(self.start_date)
+            modal.dismiss()
+
+        def on_cancel(instance):
+            modal.dismiss()
+
+        today_btn.bind(on_press=select_today)
+        cancel_btn.bind(on_press=on_cancel)
+
+        modal.add_widget(main_layout)
+        modal.open()
+
+    def _on_start_date_selected(self, day, temp_date, modal):
+        self.start_date = datetime(temp_date.year, temp_date.month, day)
+        self.start_date_text = format_date_display(self.start_date)
+        modal.dismiss()
+
+    def _get_month_name(self, month_num):
+        months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                  "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+        return months[month_num - 1] if 1 <= month_num <= 12 else ""
+
+    def _get_days_in_month(self, year, month):
+        if month == 12:
+            next_month = datetime(year + 1, 1, 1)
+        else:
+            next_month = datetime(year, month + 1, 1)
+        last_day = next_month - timedelta(days=1)
+        return last_day.day
 ================================================================================
         📄 calendar_view.py
 
@@ -2329,6 +3561,9 @@ class TaskEditorScreen(Screen):
         self.selected_time = (12, 0)  # (часы, минуты)
         self.reminder_time = None
         Clock.schedule_once(self._setup_initial_state, 0.1)
+
+    def open_ai_plan(self):
+        self.manager.current = 'ai_plan'
 
     def _setup_initial_state(self, dt):
         """Устанавливает начальное состояние формы"""
@@ -2968,6 +4203,124 @@ class TaskCard(BoxLayout):
 ФАЙЛ: utils/__init__.py
 ================================================================================
 
+================================================================================
+    📄 ai_decomposition.py
+
+================================================================================
+ФАЙЛ: utils/ai_decomposition.py
+================================================================================
+
+================================================================================
+    📄 ai_utils.py
+
+================================================================================
+ФАЙЛ: utils/ai_utils.py
+================================================================================
+import os
+import re
+from google import genai
+from typing import Union, List, Tuple
+
+# Инициализация клиента (ключ можно брать из переменной окружения или указывать прямо)
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY", "AIzaSyAoRAcDSoOk4ol__PBni5Gz1aCPJQXmm7I"))
+
+def estimate_min_duration_and_plan(
+    goal: str,
+    current_level: str = "",
+    target_level: str = "",
+    minutes_per_day: int = 30
+) -> Union[int, Tuple[int, List[str]]]:
+    """
+    Оценивает минимально возможный срок достижения цели для среднего человека
+    с учётом доступного времени в день.
+    Если цель недостижима, возвращает 0.
+    Иначе возвращает кортеж (минимальное_количество_дней, список_строк_расписания).
+    """
+    prompt = f"""
+Ты — эксперт по планированию. Твоя задача — оценить минимально возможный срок достижения цели для среднего человека, учитывая доступное время в день, и составить пошаговое расписание.
+
+Входные данные:
+Цель: {goal}
+Текущий уровень: {current_level}
+Желаемый уровень: {target_level}
+Время в день (минут): {minutes_per_day}
+
+Правила:
+1. Если цель НЕДОСТИЖИМА для среднего человека даже при максимальных усилиях (например, выучить китайский за день), ответь только числом 0. Никаких других слов.
+2. Если цель достижима, определи минимальное целое количество дней, необходимое для её достижения при указанном времени в день. Используй реалистичные средние показатели прогресса.
+3. Затем составь расписание действий на каждый день, когда нужно что-то делать. Дни без действий (например, отдых) не включай.
+4. Нумерация дней сквозная от начала проекта (День 1, День 2, День 3, ...). Если нужны дни отдыха, пропускай номера (например, День 1, День 3, День 5).
+5. Каждая строка расписания должна начинаться с "День N:" и содержать конкретное действие. Никаких пояснений до и после расписания.
+6. ОТВЕТ ДОЛЖЕН СТРОГО СООТВЕТСТВОВАТЬ ФОРМАТУ:
+   - Первая строка: только число (минимальный срок).
+   - Вторая строка: пустая.
+   - Все последующие строки: расписание, каждая строка с новой строки.
+
+Пример 1 (достижимо):
+Цель: научиться подтягиваться 30 раз
+Текущий уровень: 5 раз
+Желаемый уровень: 30 раз
+Время в день: 30 минут
+
+Ответ:
+45
+
+День 1: Разминка, 3 подхода с максимальным количеством подтягиваний.
+День 3: Негативные подтягивания 4x5.
+День 5: Лёгкая тренировка хвата и кора.
+... (и так далее до дня 45)
+
+Пример 2 (недостижимо):
+Цель: научиться подтягиваться 100 раз за месяц
+Текущий уровень: 0 раз
+Время в день: 10 минут
+
+Ответ:
+0
+
+Теперь выполни задание для указанных входных данных. Помни: никаких лишних слов, только число, пустая строка и расписание.
+"""
+    response = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=prompt
+    )
+    text = response.text.strip()
+
+    # Если ответ состоит только из цифр (возможно с пробелами)
+    if text.isdigit():
+        return int(text)
+
+    # Пытаемся найти число в первой строке
+    lines = text.split('\n')
+    first_line = lines[0].strip() if lines else ""
+    match = re.match(r'^(\d+)$', first_line)
+    if match:
+        min_days = int(match.group(1))
+        # Остальные строки — расписание (пропускаем вторую пустую строку)
+        schedule = []
+        for line in lines[1:]:
+            line = line.strip()
+            if line and line.lower().startswith('день'):
+                schedule.append(line)
+        if schedule:
+            return (min_days, schedule)
+        else:
+            # Если после числа нет расписания, считаем ошибкой
+            return 0
+    else:
+        # Если первая строка не число, возможно модель сразу начала с расписания
+        # Попробуем найти число где-то ещё
+        numbers = re.findall(r'^\d+$', text, re.MULTILINE)
+        if numbers:
+            min_days = int(numbers[0])
+            # Удаляем найденное число из текста
+            rest = re.sub(r'^\d+\s*\n?', '', text, count=1, flags=re.MULTILINE).strip()
+            lines = rest.split('\n')
+            schedule = [line.strip() for line in lines if line.strip() and line.strip().lower().startswith('день')]
+            if schedule:
+                return (min_days, schedule)
+        # Если ничего не получилось, возвращаем 0 (невозможно определить)
+        return 0
 ================================================================================
     📄 config.py
 

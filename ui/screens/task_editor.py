@@ -32,6 +32,9 @@ class TaskEditorScreen(Screen):
         self.reminder_time = None
         Clock.schedule_once(self._setup_initial_state, 0.1)
 
+    def open_ai_plan(self):
+        self.manager.current = 'ai_plan'
+
     def _setup_initial_state(self, dt):
         """Устанавливает начальное состояние формы"""
         if hasattr(self, 'ids') and 'medium_priority' in self.ids:

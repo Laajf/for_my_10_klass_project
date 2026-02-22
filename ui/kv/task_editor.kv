@@ -360,6 +360,29 @@
                                 rounded_rectangle: [self.x, self.y, self.width, self.height, dp(12)]
                                 width: 1.5
 
+                # ---------- Кнопка AI-планирования (новая) ----------
+                Button:
+                    text: "РАЗБИТЬ С AI"
+                    font_size: "14sp"
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    color: 1, 1, 1, 1
+                    on_press: root.open_ai_plan()
+                    size_hint_y: None
+                    height: dp(50)
+                    canvas.before:
+                        Color:
+                            rgba: 0.6, 0.2, 0.8, 1  # фиолетовый
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(16)]
+                        Color:
+                            rgba: 0.5, 0.1, 0.7, 1
+                        Line:
+                            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+                            width: 2
+
         # ---------- Фиксированная нижняя панель ----------
         BoxLayout:
             size_hint_y: None
