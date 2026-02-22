@@ -30,19 +30,17 @@ jobs:
 
       - name: Setup Android SDK and build-tools
         run: |
-          # Создаём структуру SDK
-          mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+          # Создаём структуру SDK, ожидаемую buildozer
+          mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
           # Скачиваем command line tools
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
           unzip -q /tmp/cmdline-tools.zip -d /tmp/
-          cp -r /tmp/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/
-          # Создаём символическую ссылку для совместимости со старым путём buildozer
-          mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
-          ln -sf ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
+          # Копируем содержимое cmdline-tools в папку tools (не в cmdline-tools/latest)
+          cp -r /tmp/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/tools/
           # Принимаем все лицензии
-          yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses
           # Устанавливаем платформу и build-tools
-          ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3"
+          ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3"
 
       - name: Build with buildozer
         run: |
