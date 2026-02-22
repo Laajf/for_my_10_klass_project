@@ -23,11 +23,15 @@ jobs:
             libncurses5-dev libncursesw5-dev \
             cmake libffi-dev libssl-dev
 
+      - name: Install Python packages
+        run: |
+          pip install --upgrade pip
+          pip install cython==0.29.36 buildozer
+
       - name: Build with buildozer
         run: |
-          buildozer android debug
+          python -m buildozer android debug
         env:
-          # Указываем Java 17 для Gradle (требуется для Android Gradle Plugin)
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
 
       - name: Upload APK
