@@ -107,10 +107,10 @@ android.api = 30
 #android.minapi = 21
 
 # (int) Android SDK version to use
-#android.sdk = 20
+android.sdk = 30
 
 # (str) Android NDK version to use
-#android.ndk = 23b
+android.ndk = 25b
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 #android.ndk_api = 21
@@ -122,7 +122,7 @@ android.api = 30
 #android.ndk_path =
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = /Users/admin/.buildozer/android/platform/android-sdk
+#android.sdk_path = /Users/admin/.buildozer/android/platform/android-sdk
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =
